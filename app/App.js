@@ -12,14 +12,15 @@ var App = React.createClass({
       text: "",
       code: "Write something",
       counter: 0,
-      notes: [],
-      displayedNotes: []
     };
   },
+  
+  componentWillMount: function() {
+
+  },
+
   componentDidMount: function() {
-    /* Grab the DB from firebase. Set the results as an array of notes. Why isn't firebaseRef accessible from other functions? */
-    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
-    this.bindAsArray(firebaseRef, "notes");
+
   },
 
   searchHandler: function(key, searchKey) {
@@ -34,14 +35,12 @@ var App = React.createClass({
 
   updateCode: function(newCode) {
     /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */
-    var firebaseRef = Rebase.createClass("https://scrtchpd.firebaseio.com/notes");
-      /* Why does this only work if defined above? Shouldn't it pull in vars from other functions? */
-    var testRef = firebaseRef.child(this.state.item['.key']); 
+    var childRef = firebaseRef.child(this.state.item['.key']); 
     /* This code sets the text of Codemirror */
     this.setState({
         code: newCode
     });
-    testRef.update({
+    childRef.update({
       "note": this.state.code,
       "updated_at": Firebase.ServerValue.TIMESTAMP
     });
@@ -61,7 +60,7 @@ var App = React.createClass({
       "note": "Write something!",
       "created_at": Firebase.ServerValue.TIMESTAMP,
       "updated_at": Firebase.ServerValue.TIMESTAMP
-    });
+    })
     this.bindAsObject(newNoteRef, "emptyNote");
     this.setState({code: newNoteRef.toString()});
     this.unbind("emptyNote");
@@ -82,11 +81,11 @@ var App = React.createClass({
             <div className="archive">
               <SearchBar searchHandler={this.searchHandler}/>
               <div className="notes">
-                <NoteList notes={this.state.displayedNotes} updateNoteArea={this.handleNoteAreaUpdate} />
+                <NoteList updateNoteArea={this.handleNoteAreaUpdate} />
               </div>
             </div>
             <section className="writer">
-              <Codemirror value={this.state.code} options={options} />
+              <Codemirror value={this.state.code} options={options} onChange={this.updateCode} />
             </section>
           </div>
       );
