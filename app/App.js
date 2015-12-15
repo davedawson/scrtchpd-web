@@ -9,14 +9,14 @@ var App = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState: function() {
     return {
-      text: "",
       code: "Write something",
       counter: 0,
     };
   },
   
   componentWillMount: function() {
-
+    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
+    this.bindAsArray(firebaseRef, "notes");
   },
 
   componentDidMount: function() {
@@ -24,13 +24,13 @@ var App = React.createClass({
   },
 
   searchHandler: function(key, searchKey) {
-    console.log(this.state.notes);
     var results = this.state.notes.filter(function (element) {
       var note = element.note;
       return note.toLowerCase().indexOf(key.toLowerCase()) > -1; 
     });
     this.setState({
-      displayedNotes: results
+      notes: results,
+      results: results
     });
   },
 
@@ -55,8 +55,7 @@ var App = React.createClass({
     /* This takes the actived note, and sets the state of Codemirror that that note's full text. */
     this.setState({
       code: item.note,
-      item: item,
-      notes: notes
+      item: item
     });
   },
   newNote: function(){
@@ -69,12 +68,6 @@ var App = React.createClass({
     this.bindAsObject(newNoteRef, "emptyNote");
     this.setState({code: newNoteRef.toString()});
     this.unbind("emptyNote");
-  },
-  onUpdate: function(val){
-      this.setState({
-          data: val
-      });
-      console.log('updated from App')
   },
   render: function() {
       var options = {
@@ -92,7 +85,7 @@ var App = React.createClass({
             <div className="archive">
               <SearchBar searchHandler={this.searchHandler}/>
               <div className="notes">
-                <NoteList updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} />
+                <NoteList notes={this.state.notes} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} />
               </div>
             </div>
             <section className="writer">
