@@ -16,11 +16,11 @@ var NoteList = React.createClass({
   activateNote: function(i, item) { 
     /* This takes the clicked note, and displays it's full content in the main text window */
     console.log('full note:' + item);
-    this.props.updateNoteArea(item);
+    this.props.updateNoteArea(item, this.state.notes);
     /* this.props.updateNoteArea(item.note); */
   },
   render: function() {
-    console.log(this.state.notes);
+    
     return (
       <ul className="notes-list" >
         {this.state.notes.map(function(item, i) {
