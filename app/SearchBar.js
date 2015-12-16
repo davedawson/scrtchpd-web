@@ -5,6 +5,10 @@ var SearchBar = React.createClass({
   getInitialState: function() {
       return {searchKey: ""};
   },
+  doSearch:function(event){
+    var query=event.target.value; // this is the search text
+    this.props.doSearch(query);
+  },
   searchHandler: function(event) {
       var searchKey = event.target.value;
       this.setState({searchKey: searchKey});
@@ -13,7 +17,7 @@ var SearchBar = React.createClass({
   render: function() {
     return (
       <form>
-         <input type="search" value={this.state.symbol} onChange={this.searchHandler}/>
+         <input type="search" value={this.state.symbol}  ref="searchInput" value={this.props.query} onChange={this.doSearch} />
       </form>
     )
   }

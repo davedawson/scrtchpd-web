@@ -1,5 +1,5 @@
 var React = require('react');
-
+var TimeAgo = require('react-timeago');
 var NoteList = React.createClass({
   /* This compenent contains the list of individual notes */
   mixins: [ReactFireMixin],
@@ -26,7 +26,7 @@ var NoteList = React.createClass({
           var note = item.note.substring(0,50);
           return (
             /* Using this li element here, because the onClick function doesn't want to work on the Note compenent below */
-            <li onClick={this.activateNote.bind(this, i, item)} key={i}><strong>{item.updated_at}</strong>{note}</li>
+            <li onClick={this.activateNote.bind(this, i, item)} key={i}><strong><TimeAgo date={item.updated_at} /></strong>{note}</li>
             /* <Note onClick={this.activateNote.bind(this, i, item)} item={item} key={i} /> */ 
           );
         }, this)}
