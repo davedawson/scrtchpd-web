@@ -109,7 +109,7 @@ var App = React.createClass({
   },
   placeNewNote: function(){
     console.log('New Note, creating now');
-      this.unbind("item");
+      
       var newNoteRef = this.firebaseRefs.notes.push({
         "note": "Write something!",
         "created_at": Firebase.ServerValue.TIMESTAMP,
@@ -119,6 +119,7 @@ var App = React.createClass({
       this.setState({
         code: "Write something! NEW NOTE",
       });
+      this.unbind("item");
 
   },
   newNote: function(){
