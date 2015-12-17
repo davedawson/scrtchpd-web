@@ -9,11 +9,13 @@ var Codemirror = require('react-codemirror');
 var App = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState: function() {
+
     return {
       code: "Write something",
       counter: 0,
       query:'',
       notes: [],
+      codePlaceholder: "Write something!",
       filteredData: [
       
       ]
@@ -56,20 +58,34 @@ var App = React.createClass({
   },
 
   updateCode: function(newCode) {
-    if (this.state.code != "Write something"){ 
-      /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */
-      var firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
-      /* Why does this only work if defined above? Shouldn't it pull in vars from other functions? */
-    var testRef = firebaseRef.child(this.state.item['.key']); 
-    /* This code sets the text of Codemirror */
+
+    console.log('typing');
     this.setState({
         code: newCode
     });
-    testRef.update({
-      "note": this.state.code,
-      "updated_at": Firebase.ServerValue.TIMESTAMP
-    });
+    if (this.state.code != "Write something") {
+      /* this.state.item.note != "Write something!" && this.state.item.key == null  */
+      console.log('Not default note');
+      /* Create a new note */
+      this.createNewNote(this.state.code);
+      console.log('Creating a new note.2');
+    } else if (this.state.item){
+      /* If an item exists, update that item */
+      var firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
+      /* Why does this only work if defined above? Shouldn't it pull in vars from other functions? */
+      var testRef = firebaseRef.child(this.state.item['.key']); 
+      /* This code sets the text of Codemirror */
+      testRef.update({
+        "note": this.state.code,
+        "updated_at": Firebase.ServerValue.TIMESTAMP
+      });
       console.log(testRef);
+      console.log('Updating existing note');
+    }
+    if (this.state.code != "Write something"){ 
+      /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */
+      
+      
     }
     
   },
@@ -81,7 +97,10 @@ var App = React.createClass({
     });
   },
   newNote: function(){
-    console.log('new');
+    /*
+    if (this.state.item) {
+      console.log('already a note');
+    } else {
     var newNoteRef = this.firebaseRefs.notes.push({
       "note": "Write something!",
       "created_at": Firebase.ServerValue.TIMESTAMP,
@@ -91,8 +110,43 @@ var App = React.createClass({
     this.setState({
       code: "Write something!",
     });
-    console.log(this.state.emptyNote)
-    
+    }
+    */
+    if (this.state.item) {
+      console.log('already a note. Do nothing.');
+    } else {
+      console.log('New Note, creating now');
+      var newNoteRef = this.firebaseRefs.notes.push({
+        "note": "Write something!",
+        "created_at": Firebase.ServerValue.TIMESTAMP,
+        "updated_at": Firebase.ServerValue.TIMESTAMP
+      })
+      this.bindAsObject(newNoteRef, "item");
+      this.setState({
+        code: "Write something!",
+      });
+    }
+
+    /* this.unbind("emptyNote"); */
+  },
+  createNewNote: function(item){
+    if (this.state.item) {
+      console.log('already a note. Do nothing.');
+    } else {
+    console.log('Creating a new note');
+      var newNoteRef = this.firebaseRefs.notes.push({
+        "note": this.state.code,
+        "created_at": Firebase.ServerValue.TIMESTAMP,
+        "updated_at": Firebase.ServerValue.TIMESTAMP
+      });
+      this.bindAsObject(newNoteRef, "emptyNote");
+      this.bindAsObject(newNoteRef, "item");
+      this.setState({code: newNoteRef.toString()});
+      console.log(newNoteRef.toString());
+
+      this.unbind("emptyNote");
+    }
+
   },
   render: function() {
       var options = {
@@ -111,7 +165,7 @@ var App = React.createClass({
             <div className="archive">
               <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
               <div className="notes">
-                <NoteList notes={this.state.filteredData} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} />
+                <NoteList notes={this.state.notes} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} />
               </div>
             </div>
             <section className="writer">
