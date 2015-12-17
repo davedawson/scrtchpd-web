@@ -4,6 +4,7 @@ var React = require('react');
 var SearchBar = require('./SearchBar.js');
 var NoteList = require('./NoteList.js');
 
+var fuzzy = require('fuzzy');
 var Codemirror = require('react-codemirror');
 
 var App = React.createClass({
@@ -16,12 +17,9 @@ var App = React.createClass({
       query:'',
       notes: [],
       codePlaceholder: "Write something!",
-      filteredData: [
-      
-      ]
     };
   },
-  
+
   componentWillMount: function() {
     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
     this.bindAsArray(firebaseRef, "notes");
@@ -34,11 +32,24 @@ var App = React.createClass({
   doSearch:function(queryText){
     console.log(queryText)
     //get query result
-    var queryResult=[];
-    this.state.notes.forEach(function(item){
-      if(item.note.toLowerCase().indexOf(queryText)!=-1)
-      queryResult.push(item);
+    var queryResult=[]; 
+    var options = {
+      pre: '<strong>',
+      post: '</strong>',
+      extract: function(el) { return el.note; }
+    };
+    var list = ['baconing', 'narwhal', 'a mighty bear canoe'];
+    var list2 = this.state.notes;
+    var results = fuzzy.filter(queryText, list2, options)
+    console.log(results);
+    /* var matches = results.map(function(el) { return el; });
+    console.log(matches);
+    */
+    /* Traverse this tree: https://www.dropbox.com/s/4j4d8poh6e0r36a/Screenshot%202015-12-17%2015.34.14.png?dl=0 */
+    results.forEach(function(item){
+      queryResult.push(item.original);
     });
+    
     
     this.setState({
       query:queryText,
@@ -183,7 +194,7 @@ var App = React.createClass({
             <div className="archive">
               <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
               <div className="notes">
-                <NoteList notes={this.state.notes} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} />
+                <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.notes} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} />
               </div>
             </div>
             <section className="writer">

@@ -1,4 +1,5 @@
 var React = require('react');
+var fuzzy = require('fuzzy');
 
 var SearchBar = React.createClass({
   /* Search form. This component lives at the top of the Archive component above the notes list, */
@@ -8,6 +9,7 @@ var SearchBar = React.createClass({
   doSearch:function(event){
     var query=event.target.value; // this is the search text
     this.props.doSearch(query);
+    console.log(fuzzy)
   },
   searchHandler: function(event) {
       var searchKey = event.target.value;

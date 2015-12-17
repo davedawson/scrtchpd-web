@@ -25,6 +25,7 @@
     "watchify": "^2.1.1"
   },
   "dependencies": {
+    "fuzzy": "^0.1.1",
     "react": "^0.14.0",
     "react-addons-test-utils": "^0.14.0",
     "react-codemirror": "^0.2.2",
