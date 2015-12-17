@@ -63,12 +63,12 @@ var App = React.createClass({
     this.setState({
         code: newCode
     });
-    if (this.state.code != "Write something") {
+    if (this.state.code != "Write something" && this.state.item == null) {
       /* this.state.item.note != "Write something!" && this.state.item.key == null  */
       console.log('Not default note');
       /* Create a new note */
       this.createNewNote(this.state.code);
-      console.log('Creating a new note.2');
+      console.log('Sending to createNewNote');
     } else if (this.state.item){
       /* If an item exists, update that item */
       var firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
@@ -141,7 +141,7 @@ var App = React.createClass({
       });
       this.bindAsObject(newNoteRef, "emptyNote");
       this.bindAsObject(newNoteRef, "item");
-      this.setState({code: newNoteRef.toString()});
+      this.setState({code: this.code });
       console.log(newNoteRef.toString());
 
       this.unbind("emptyNote");
@@ -174,7 +174,7 @@ var App = React.createClass({
             <div className="border">
               <ul>
                 <li className="clear"><a className="call-modal" onClick={this.clearText}><span>&times;</span></a></li>
-                <li className="character-count"><span onClick={this.onClick}>{this.state.code.length}</span></li>
+                <li className="character-count"><span onClick={this.onClick}></span></li>
                 <li><a onClick={this.newNote}>New note</a></li>
               </ul>
             </div>
