@@ -89,12 +89,26 @@ var App = React.createClass({
     }
     
   },
-  handleNoteAreaUpdate: function(item, notes){
+  handleNoteAreaUpdate: function(clickedNote, notes){
     /* This takes the actived note, and sets the state of Codemirror that that note's full text. */
     this.setState({
-      code: item.note,
-      item: item
+      code: clickedNote.note,
+      item: clickedNote
     });
+  },
+  placeNewNote: function(){
+    console.log('New Note, creating now');
+      this.unbind("item");
+      var newNoteRef = this.firebaseRefs.notes.push({
+        "note": "Write something!",
+        "created_at": Firebase.ServerValue.TIMESTAMP,
+        "updated_at": Firebase.ServerValue.TIMESTAMP
+      })
+      this.bindAsObject(newNoteRef, "item");
+      this.setState({
+        code: "Write something! NEW NOTE",
+      });
+
   },
   newNote: function(){
     /*
@@ -129,10 +143,15 @@ var App = React.createClass({
 
     /* this.unbind("emptyNote"); */
   },
-  createNewNote: function(item){
+  handleNewNote: function(item){
     if (this.state.item) {
-      console.log('already a note. Do nothing.');
+      console.log('A note already exists as Item. Do nothing.');
     } else {
+      console.log('Ready to create a new note. Sending to createNewNote');
+      this.createNewNote(item);
+    }
+  },
+  createNewNote: function(item){
     console.log('Creating a new note');
       var newNoteRef = this.firebaseRefs.notes.push({
         "note": this.state.code,
@@ -145,7 +164,6 @@ var App = React.createClass({
       console.log(newNoteRef.toString());
 
       this.unbind("emptyNote");
-    }
 
   },
   render: function() {
@@ -175,7 +193,7 @@ var App = React.createClass({
               <ul>
                 <li className="clear"><a className="call-modal" onClick={this.clearText}><span>&times;</span></a></li>
                 <li className="character-count"><span onClick={this.onClick}></span></li>
-                <li><a onClick={this.newNote}>New note</a></li>
+                <li><a onClick={this.placeNewNote}>New note</a></li>
               </ul>
             </div>
           </div>
