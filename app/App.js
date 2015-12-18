@@ -204,7 +204,7 @@ var App = React.createClass({
               </div>
             </div>
             <section className="writer">
-              <Codemirror value={this.state.code} options={options} onChange={this.updateCode} />
+              <Codemirror value={this.state.code} options={options} onChange={this.updateCode} placeholder="testing placeholder" />
             </section>
             <div className="border">
               <ul>
