@@ -1,7 +1,6 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Pad = require('./Pad.js');
 var SearchBar = require('./SearchBar.js');
 var NoteList = require('./NoteList.js');
 var Router = require('react-router');
@@ -13,7 +12,7 @@ var Codemirror = require('react-codemirror');
     require('../../node_modules/codemirror/mode/gfm/gfm.js');
     require('../../node_modules/codemirror/addon/display/placeholder.js');
 
-var App = React.createClass({
+var Pad = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState: function() {
 
@@ -199,13 +198,26 @@ var App = React.createClass({
       };
       return (
           <div>
-          <li><Link to="/home">Home</Link></li>
-          <li><Link to="/pad">Pad</Link></li>
-            {this.props.children}
+            <div className="archive">
+              <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
+              <div className="notes">
+                <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.notes} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} />
+              </div>
+            </div>
+            <section className="writer">
+              <Codemirror value={this.state.code} options={options} onChange={this.updateCode} placeholder="testing placeholder" />
+            </section>
+            <div className="border">
+              <ul>
+                <li className="clear"><a className="call-modal" onClick={this.clearText}><span>&times;</span></a></li>
+                <li className="character-count"><span onClick={this.onClick}></span></li>
+                <li><a onClick={this.placeNewNote}>New note</a></li>
+              </ul>
+            </div>
           </div>
       );
   }
     
 });
 
-module.exports = App;
+module.exports = Pad;

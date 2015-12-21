@@ -1,6 +1,7 @@
 var React = require('react');
 var App = require('../components/App');
 var Home = require('../components/Home');
+var Pad = require('../components/Pad');
 var Router = require('react-router');
 var Route = Router.Route;
 var Link = require('react-router').Link
@@ -11,7 +12,8 @@ module.exports = (
 	
 		<Router>
 	    <Route path="/" component={App}>
-	      <Route path="home" component={Home} />
+	      <Route path="home" component={Home} location="history" />
+	      <Route path="pad" component={Pad} location="history" />
 	    </Route>
 	  </Router>
 	
