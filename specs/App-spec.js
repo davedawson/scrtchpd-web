@@ -1,4 +1,4 @@
-var App = require('./../app/App.js');
+var App = require('./../app/components/App.js');
 var React = require('react/addons');
 var TestUtils = React.addons.TestUtils;
 

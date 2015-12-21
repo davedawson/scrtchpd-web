@@ -6,9 +6,9 @@ var NoteList = require('./NoteList.js');
 
 var fuzzy = require('fuzzy');
 var Codemirror = require('react-codemirror');
-    require('../node_modules/codemirror/mode/markdown/markdown.js')
-    require('../node_modules/codemirror/mode/gfm/gfm.js');
-    require('../node_modules/codemirror/addon/display/placeholder.js');
+    require('../../node_modules/codemirror/mode/markdown/markdown.js')
+    require('../../node_modules/codemirror/mode/gfm/gfm.js');
+    require('../../node_modules/codemirror/addon/display/placeholder.js');
 
 var App = React.createClass({
   mixins: [ReactFireMixin],
