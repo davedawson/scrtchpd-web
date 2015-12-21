@@ -199,8 +199,11 @@ var App = React.createClass({
       };
       return (
           <div>
-          <li><Link to="/home">Home</Link></li>
-          <li><Link to="/pad">Pad</Link></li>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="pad">Pad</Link></li>
+          <li><Link to="login" className="navbar-brand">Login</Link></li>
+          <li><Link to="register" className="navbar-brand"> Register </Link></li>
+          <li><Link to="logout" className="navbar-brand">Logout</Link></li>
             {this.props.children}
           </div>
       );
