@@ -3,6 +3,8 @@
 var React = require('react');
 var SearchBar = require('./SearchBar.js');
 var NoteList = require('./NoteList.js');
+var Router = require('react-router');
+var Link = require('react-router').Link
 
 var fuzzy = require('fuzzy');
 var Codemirror = require('react-codemirror');
@@ -196,7 +198,7 @@ var App = React.createClass({
       };
       return (
           <div>
-          
+          <li><Link to="/home">Home</Link></li>
             <div className="archive">
               <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
               <div className="notes">
