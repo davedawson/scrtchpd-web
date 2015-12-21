@@ -1,6 +1,10 @@
 /** @jsx React.DOM */
 var React = require('react');
 var ReactDOM = require('react-dom');
-var App = require('./components/App.js');
+var Router = require('react-router').Router;
+var routes = require('./config/routes');
 
-ReactDOM.render(<App/>, document.body);
+ReactDOM.render(
+	<Router>{routes}</Router>,
+	document.getElementById('app')
+)
