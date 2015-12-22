@@ -8,19 +8,37 @@ var Register = React.createClass({
     e.preventDefault();
     var email = this.refs.email.getDOMNode().value;
     var pw = this.refs.pw.getDOMNode().value;
-    firebaseUtils.createUser({email: email, password: pw}, function(result){
-      if(result){
-        this.replaceWith('dashboard');
+    var firstName = this.refs.firstName.getDOMNode().value;
+    var lastName = this.refs.lastName.getDOMNode().value;
+    firebaseUtils.createUser({
+      email: email,
+      firstName: firstName, 
+      lastName: lastName, 
+      password: pw
+    }, function(error, userData) {
+      if (error) {
+        console.log("Error creating user:", error);
+      } else {
+        console.log("Successfully created user account with uid:", userData.uid);
       }
     }.bind(this));
   },
   render: function(){
     return (
       <div className="col-sm-6 col-sm-offset-3">
+      <h1>Register</h1>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label> Email </label>
             <input className="form-control" ref="email" placeholder="Email"/>
+          </div>
+          <div className="form-group">
+            <label> First Name </label>
+            <input className="form-control" ref="firstName" placeholder="First Name"/>
+          </div>
+          <div className="form-group">
+            <label> Last Name </label>
+            <input className="form-control" ref="lastName" placeholder="Last Name"/>
           </div>
           <div className="form-group">
             <label>Password</label>

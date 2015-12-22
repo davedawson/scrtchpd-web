@@ -27,7 +27,9 @@ var firebaseUtils = {
             addNewUserToFB({
               email: user.email,
               uid: authData.uid,
-              token: authData.token
+              token: authData.token,
+              firstName: user.firstName,
+              lastName: user.lastName
             });
           }, cb);
       }
