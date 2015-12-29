@@ -40,6 +40,19 @@ var Pad = React.createClass({
     this.setState({
       authData: authData
     });
+
+    var ref = new Firebase("https://scrtchpd.firebaseio.com/");
+
+    ref.child("users/" + authData.uid + "/notes").on('child_added', function(snapshot) {
+      // for each group, fetch the name and print it
+      var noteKey = snapshot.key();
+      console.log('noteKey');
+      ref.child("notes/" + noteKey + "/note").once('value', function(snapshot) {
+        console.log("Note: " + snapshot.val());
+      });
+    });
+
+    
   },
 
   componentDidMount: function() {
