@@ -38,7 +38,7 @@ var Pad = React.createClass({
     console.log(userNotesRef);
     this.bindAsArray(userNotesRef, "userNotes");
     this.setState({
-      
+      authData: authData
     });
   },
 
@@ -191,8 +191,8 @@ var Pad = React.createClass({
       this.bindAsObject(newNoteRef, "item");
       this.setState({code: this.code });
       newNoteKey = newNoteRef.key();
-      console.log(newNoteRef.key());
-      var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/ddawson/notes");
+      console.log(this.state.authData.uid);
+      var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
       var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
       this.unbind("emptyNote");
       this.unbind("item");
