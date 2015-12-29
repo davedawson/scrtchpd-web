@@ -1,0 +1,65 @@
+{
+  "notes" : {
+    "n1" : {
+      "created_at" : "2015-02-05T20:29:44.575Z",
+      "note" : "Etiam porta sem malesuada magna mollis euismod. Donec ullamcorper nulla non metus auctor fringilla. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.",
+      "updated_at" : "2015-03-05T20:29:44.575Z",
+      "user" : "3cdebedc-8832-4c8c-a5b7-388eae0a4d92"
+    },
+    "n2" : {
+      "created_at" : "2015-06-05T20:29:44.575Z",
+      "note" : "Curabitur blandit tempus porttitor. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+      "updated_at" : "2015-06-15T20:29:44.575Z",
+      "user" : "3cdebedc-8832-4c8c-a5b7-388eae0a4d92"
+    },
+    "n3" : {
+      "created_at" : "2015-06-05T20:29:44.575Z",
+      "note" : "Mary's notes! Curabitur blandit tempus porttitor. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+      "updated_at" : "2015-06-15T20:29:44.575Z",
+      "user" : "efa9a95d-0e4d-498b-9ada-f681a174199f"
+    },
+    "n4" : {
+      "created_at" : "2015-06-05T20:29:44.575Z",
+      "note" : "Mary's notes! Curabitur blandit tempus porttitor. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+      "updated_at" : "2015-06-15T20:29:44.575Z",
+      "user" : "efa9a95d-0e4d-498b-9ada-f681a174199f"
+    }
+  },
+  "user" : {
+    "3cdebedc-8832-4c8c-a5b7-388eae0a4d92" : {
+      "email" : "d@d.com",
+      "firstName" : "Dave",
+      "lastName" : "Dawson",
+      "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjowLCJkIjp7InByb3ZpZGVyIjoicGFzc3dvcmQiLCJ1aWQiOiIzY2RlYmVkYy04ODMyLTRjOGMtYTViNy0zODhlYWUwYTRkOTIifSwiaWF0IjoxNDUwODIzMDQ5fQ._un79DJ4SNtrqr6nBOMfCW7NJQyXSa6erKEYtFB5M08",
+      "uid" : "3cdebedc-8832-4c8c-a5b7-388eae0a4d92"
+    },
+    "efa9a95d-0e4d-498b-9ada-f681a174199f" : {
+      "email" : "m@m.com",
+      "firstName" : "Mary",
+      "lastName" : "Dawson",
+      "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjowLCJkIjp7InByb3ZpZGVyIjoicGFzc3dvcmQiLCJ1aWQiOiJlZmE5YTk1ZC0wZTRkLTQ5OGItOWFkYS1mNjgxYTE3NDE5OWYifSwiaWF0IjoxNDUwODIzMjQ0fQ.3-RSeYiI9dYTWTqWiXoWBqnQe1elOeSjnOWxyhSncKE",
+      "uid" : "efa9a95d-0e4d-498b-9ada-f681a174199f"
+    }
+  },
+  "users" : {
+    "ddawson" : {
+      "name" : "Dave Dawson",
+      "notes" : {
+        "n3" : true
+      }
+    },
+    "mchen" : {
+      "name" : "Mary Chen",
+      "notes" : {
+        "n1" : true,
+        "n2" : true
+      }
+    },
+    "mdawson" : {
+      "name" : "Mary Dawson",
+      "notes" : {
+        "n4" : true
+      }
+    }
+  }
+}

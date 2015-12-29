@@ -5,7 +5,7 @@ var cachedUser = null;
 
 var addNewUserToFB = function(newUser){
   var key = newUser.uid;
-  ref.child('user').child(key).set(newUser);
+  ref.child('users').child(key).set(newUser);
 };
 
 var firebaseUtils = {

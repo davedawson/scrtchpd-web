@@ -28,6 +28,18 @@ var Pad = React.createClass({
   componentWillMount: function() {
     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
     this.bindAsArray(firebaseRef, "notes");
+    var notesRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
+    var authData = notesRef.getAuth();
+    console.log(authData.uid);
+
+
+    var userNotesRef = notesRef.child("user").child(authData.uid);
+    console.log('Notes:');
+    console.log(userNotesRef);
+    this.bindAsArray(userNotesRef, "userNotes");
+    this.setState({
+      
+    });
   },
 
   componentDidMount: function() {
@@ -178,8 +190,10 @@ var Pad = React.createClass({
       this.bindAsObject(newNoteRef, "emptyNote");
       this.bindAsObject(newNoteRef, "item");
       this.setState({code: this.code });
-      console.log(newNoteRef.toString());
-
+      newNoteKey = newNoteRef.key();
+      console.log(newNoteRef.key());
+      var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/ddawson/notes");
+      var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
       this.unbind("emptyNote");
       this.unbind("item");
 
@@ -196,6 +210,7 @@ var Pad = React.createClass({
         extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
         placeholder: "TESTING placeholder"
       };
+      
       return (
           <div>
             <div className="archive">
