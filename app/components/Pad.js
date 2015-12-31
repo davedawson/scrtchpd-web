@@ -28,30 +28,12 @@ var Pad = React.createClass({
   componentWillMount: function() {
     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
     this.bindAsArray(firebaseRef, "notes");
-    var notesRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
-    var authData = notesRef.getAuth();
-    console.log(authData.uid);
-
-
-    var userNotesRef = notesRef.child("user").child(authData.uid);
-    console.log('Notes:');
-    console.log(userNotesRef);
+    var authData = firebaseRef.getAuth();
+    var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + authData.uid + "/notes");
     this.bindAsArray(userNotesRef, "userNotes");
     this.setState({
       authData: authData
     });
-
-    var ref = new Firebase("https://scrtchpd.firebaseio.com/");
-
-    ref.child("users/" + authData.uid + "/notes").on('child_added', function(snapshot) {
-      // for each group, fetch the name and print it
-      var noteKey = snapshot.key();
-      console.log('noteKey');
-      ref.child("notes/" + noteKey + "/note").once('value', function(snapshot) {
-        console.log("Note: " + snapshot.val());
-      });
-    });
-
     
   },
 
@@ -206,7 +188,8 @@ var Pad = React.createClass({
       newNoteKey = newNoteRef.key();
       console.log(this.state.authData.uid);
       var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
-      var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
+      var newNoteUserRef = userNotesRef.child(newNoteKey).set({noteKey: newNoteKey}); 
+      /* var newNoteUserRef = userNotesRef.push({"user": true, "test3": false, "test4": "testing"}); */
       this.unbind("emptyNote");
       this.unbind("item");
 
@@ -229,7 +212,7 @@ var Pad = React.createClass({
             <div className="archive">
               <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
               <div className="notes">
-                <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.notes} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} />
+                <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.notes} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} />
               </div>
             </div>
             <section className="writer">

@@ -20,6 +20,12 @@ var NoteList = React.createClass({
   render: function() {
     return (
       <ul className="notes-list" >
+      Notes:
+        {this.props.userNotes.map(function(item, i) {          
+          return (
+            <li><strong>{i} - {item.key}</strong></li>
+          );
+        }, this)}
 
         {this.props.notes.map(function(item, i) {
           /* Take the full note and cut it down to 50 characters */
