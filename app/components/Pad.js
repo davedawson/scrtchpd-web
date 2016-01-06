@@ -7,6 +7,7 @@ var Router = require('react-router');
 var Link = require('react-router').Link
 
 var fuzzy = require('fuzzy');
+var Rebase = require('re-base');
 var Codemirror = require('react-codemirror');
     require('../../node_modules/codemirror/mode/markdown/markdown.js')
     require('../../node_modules/codemirror/mode/gfm/gfm.js');
@@ -26,10 +27,12 @@ var Pad = React.createClass({
   },
 
   componentWillMount: function() {
-    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
-    this.bindAsArray(firebaseRef, "notes");
+    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
+    var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
+    this.bindAsArray(allNotesRef, "notes");
     var authData = firebaseRef.getAuth();
-    var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + authData.uid + "/notes");
+    var userNotesRef = firebaseRef.child("/users/" + authData.uid + "/notes").limitToLast(15);
+    /* var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + authData.uid + "/notes"); */
     this.bindAsArray(userNotesRef, "userNotes");
     this.setState({
       authData: authData

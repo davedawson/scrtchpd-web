@@ -1,8 +1,16 @@
 var React = require('react');
 var TimeAgo = require('react-timeago');
+var Rebase = require('re-base');
+
 var NoteList = React.createClass({
   /* This compenent contains the list of individual notes */
   mixins: [ReactFireMixin],
+
+  getInitialState: function(){
+    return {
+      notesListBase: ['a','b','v', '4']
+    };
+  },
   componentWillMount: function() {
     this.setState({
       displayedNotes: this.props.notes
@@ -14,20 +22,40 @@ var NoteList = React.createClass({
       // for each note, fetch the key and log it.
       // console.log(snapshot.key());
     });
-     
-      
-    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
+
+    base = Rebase.createClass('https://scrtchpd.firebaseio.com');
+    var testArray = ['a','b','c','4'];
+
+    base.syncState('notes', {
+      context: this,
+      state: 'notesListBase',
+      asArray: true,
+      queries: {
+        limitToLast: 20
+      }
+    });
+
+
+
+    
+
+/*     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
     this.props.userNotes.map(function(item, i) {         
       console.log('original map');
       firebaseRef.child("notes/" + item['.key'] + "/note").on('value', function(snapshot) {
         console.log("Mary is a member of this group: " + item['.key'])
       });      
     });
-
+*/
 
   },
+  loadedFromFirebase: function(){
+    this.state.notesListBase.map(function(item, i) {         
+      console.log('note from long list');
+    });
+  },
   componentDidMount: function() {
-    
+    console.log(this.state.notesListBase);
   },
   activateNote: function(i, item) { 
     /* This takes the clicked note, and displays it's full content in the main text window */
@@ -36,17 +64,10 @@ var NoteList = React.createClass({
     /* this.props.updateNoteArea(item.note); */
   },
   render: function() {
-    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
-    {this.props.userNotes.map(function(item, i) {         
-      console.log('orignal map');
-      firebaseRef.child("notes/" + item['.key'] + "/note").on('value', function(snapshot) {
-        console.log("Mary is a member of this group: " + item['.key'])
-      });  
-    }, this)} 
+
     return (
       <ul className="notes-list" >      
-
-      Notes:{this.props.userNotes.length} 
+      Notes:{this.state.notesListBase.length} 
         {this.props.userNotes.map(function(item, i) {          
           return (
             <li><strong>{i} - {item['.key']}</strong></li>
