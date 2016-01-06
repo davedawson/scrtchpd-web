@@ -188,7 +188,7 @@ var Pad = React.createClass({
       newNoteKey = newNoteRef.key();
       console.log(this.state.authData.uid);
       var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
-      var newNoteUserRef = userNotesRef.child(newNoteKey).set({noteKey: newNoteKey}); 
+      var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
       /* var newNoteUserRef = userNotesRef.push({"user": true, "test3": false, "test4": "testing"}); */
       this.unbind("emptyNote");
       this.unbind("item");
@@ -212,7 +212,7 @@ var Pad = React.createClass({
             <div className="archive">
               <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
               <div className="notes">
-                <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.notes} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} />
+                <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.notes} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
               </div>
             </div>
             <section className="writer">
