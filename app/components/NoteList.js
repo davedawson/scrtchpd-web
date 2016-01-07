@@ -12,50 +12,60 @@ var NoteList = React.createClass({
     };
   },
   componentWillMount: function() {
+    usersNotesKeys = []
+    usersNotesList = []
+    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
+    // Grab the user's notes keys and loop through them
+    firebaseRef.child('users/' + this.props.auth.uid + '/notes').on("child_added", function(noteKeySnapshot) {
+      // Take each kay and add it to an array  - TODO: I think this is unnecessary, but is helpful to have for testing. Remove. 
+      usersNotesKeys.push(noteKeySnapshot.key());
+      // For each note key, go and fetch the Note record with the same key
+      firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
+        // Add that full note object to an array
+        usersNotesList.push(noteSnapshot.val());
+      });
+      this.setState({
+        listItems: usersNotesKeys,
+        usersNotesList: usersNotesList
+      });
+    }.bind(this));
     this.setState({
       displayedNotes: this.props.notes
     });
-    usersNotesRefTest = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.props.auth.uid + "/notes");
-    this.bindAsArray(usersNotesRefTest, "userNotesTest2");
-    // fetch a list of user's notes
-     usersNotesRefTest.on('child_added', function(snapshot) {
-      // for each note, fetch the key and log it.
-      // console.log(snapshot.key());
-    });
-
-    base = Rebase.createClass('https://scrtchpd.firebaseio.com');
-    var testArray = ['a','b','c','4'];
-
-    base.syncState('notes', {
-      context: this,
-      state: 'notesListBase',
-      asArray: true,
-      queries: {
-        limitToLast: 20
-      }
-    });
-
-
-
-    
-
-/*     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
-    this.props.userNotes.map(function(item, i) {         
-      console.log('original map');
-      firebaseRef.child("notes/" + item['.key'] + "/note").on('value', function(snapshot) {
-        console.log("Mary is a member of this group: " + item['.key'])
-      });      
-    });
-*/
-
-  },
-  loadedFromFirebase: function(){
-    this.state.notesListBase.map(function(item, i) {         
-      console.log('note from long list');
-    });
   },
   componentDidMount: function() {
-    console.log(this.state.notesListBase);
+    /*
+    // I don't think I should have to use both Re-base and Firebase. But Re-base doesn't have the child functions to traverse
+    // through the object tree (unless I'm missing something). And Firebase doesn't have the `then` function to only run
+    // once the data has been returned. TODO
+    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
+    base = Rebase.createClass('https://scrtchpd.firebaseio.com');
+    base.syncState('users/' + this.props.auth.uid + '/notes', {
+      context: this,
+      state: 'usersNoteKeys',
+      asArray: false,
+      queries: {
+        limitToLast: 20
+      },
+      then: function() {
+        // Iterate through the user's keys
+        usersNotesList = [];
+        Object.keys(this.state.usersNoteKeys).map(function(value, key, index) {
+          
+          // For each Note key, go and grab the Note record of the same key.
+          firebaseRef.child("notes/" + value).on('value', function(snapshot) {
+            // Add this full note record to our array.
+            usersNotesList.push(snapshot.val());
+          }); 
+        });
+
+        this.setState({
+          // Add the full array of notes to state
+          usersFullNotes: usersNotesList
+        });
+      }
+    });
+*/
   },
   activateNote: function(i, item) { 
     /* This takes the clicked note, and displays it's full content in the main text window */
@@ -63,8 +73,7 @@ var NoteList = React.createClass({
     this.props.updateNoteArea(item, this.state.notes);
     /* this.props.updateNoteArea(item.note); */
   },
-  render: function() {
-
+  render: function() {    
     return (
       <ul className="notes-list" >      
       Notes:{this.state.notesListBase.length} 
