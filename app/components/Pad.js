@@ -22,12 +22,15 @@ var Pad = React.createClass({
       counter: 0,
       query:'',
       notes: [],
+      usersNotesList: [],
       codePlaceholder: "Write something!",
     };
   },
 
   componentWillMount: function() {
     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
+
+    // All notes
     var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
     this.bindAsArray(allNotesRef, "notes");
     var authData = firebaseRef.getAuth();
@@ -37,7 +40,30 @@ var Pad = React.createClass({
     this.setState({
       authData: authData
     });
-    
+
+
+    // User specific notes
+    usersNotesKeys = []
+    usersNotesList = []
+    // Grab the user's notes keys and loop through them
+    firebaseRef.child('users/' + authData.uid + '/notes').on("child_added", function(noteKeySnapshot) {
+      // console.log(noteKeySnapshot.key());
+      // Take each key and add it to an array  - TODO: I think this is unnecessary, but is helpful to have for testing. Remove. 
+      usersNotesKeys.push(noteKeySnapshot.key());
+      // For each note key, go and fetch the Note record with the same key
+      firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
+        console.log(noteSnapshot.val());
+        // Add that full note object to an array
+        usersNotesList.push(noteSnapshot.val());
+      });
+      console.log('list array:');
+      console.log(usersNotesList);
+      this.setState({
+        listItems: usersNotesKeys,
+        usersNotesList: usersNotesList
+      });
+    }.bind(this));    
+
   },
 
   componentDidMount: function() {
@@ -215,7 +241,7 @@ var Pad = React.createClass({
             <div className="archive">
               <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
               <div className="notes">
-                <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.notes} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
+                <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
               </div>
             </div>
             <section className="writer">

@@ -12,23 +12,6 @@ var NoteList = React.createClass({
     };
   },
   componentWillMount: function() {
-    usersNotesKeys = []
-    usersNotesList = []
-    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
-    // Grab the user's notes keys and loop through them
-    firebaseRef.child('users/' + this.props.auth.uid + '/notes').on("child_added", function(noteKeySnapshot) {
-      // Take each kay and add it to an array  - TODO: I think this is unnecessary, but is helpful to have for testing. Remove. 
-      usersNotesKeys.push(noteKeySnapshot.key());
-      // For each note key, go and fetch the Note record with the same key
-      firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
-        // Add that full note object to an array
-        usersNotesList.push(noteSnapshot.val());
-      });
-      this.setState({
-        listItems: usersNotesKeys,
-        usersNotesList: usersNotesList
-      });
-    }.bind(this));
     this.setState({
       displayedNotes: this.props.notes
     });
@@ -76,18 +59,6 @@ var NoteList = React.createClass({
   render: function() {    
     return (
       <ul className="notes-list" >      
-      Notes:{this.state.notesListBase.length} 
-        {this.props.userNotes.map(function(item, i) {          
-          return (
-            <li><strong>{i} - {item['.key']}</strong></li>
-          );
-          {firebaseRef.child("notes/" + item['.key'] + "/note").once('value', function(snapshot) {
-            return (
-              "Mary is a member of this group: "
-              )
-          }, this)}          
-        }, this)}
-
         {this.props.notes.map(function(item, i) {
           /* Take the full note and cut it down to 50 characters */
           var note = item.note.substring(0,50);
