@@ -80,7 +80,7 @@ var Pad = React.createClass({
       extract: function(el) { return el.note; }
     };
     var list = ['baconing', 'narwhal', 'a mighty bear canoe'];
-    var list2 = this.state.notes;
+    var list2 = this.state.usersNotesList;
     var results = fuzzy.filter(queryText, list2, options)
     console.log(results);
     /* var matches = results.map(function(el) { return el; });
