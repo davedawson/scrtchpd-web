@@ -29,7 +29,7 @@ var Pad = React.createClass({
 
   componentWillMount: function() {
     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
-
+    base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
     // All notes
     var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
     this.bindAsArray(allNotesRef, "notes");
@@ -46,23 +46,57 @@ var Pad = React.createClass({
     usersNotesKeys = []
     usersNotesList = []
     // Grab the user's notes keys and loop through them
-    firebaseRef.child('users/' + authData.uid + '/notes').on("child_added", function(noteKeySnapshot) {
+    firebaseRef.child('users/' + authData.uid + '/notes').orderByChild('date_updated').on("child_added", function(noteKeySnapshot) {
       // console.log(noteKeySnapshot.key());
       // Take each key and add it to an array  - TODO: I think this is unnecessary, but is helpful to have for testing. Remove. 
       usersNotesKeys.push(noteKeySnapshot.key());
       // For each note key, go and fetch the Note record with the same key
+       
       firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
-        console.log(noteSnapshot.val());
-        // Add that full note object to an array
-        usersNotesList.push(noteSnapshot.val());
+        // Add that full note object to an array + the parent key
+        var data = noteSnapshot.val();
+        usersNotesList.push({
+            'created_at': data.created_at, 
+            'updated_at': data.updated_at,
+            'note':       data.note,
+            'key':        noteKeySnapshot.key()
+        });
       });
-      console.log('list array:');
-      console.log(usersNotesList);
+
       this.setState({
         listItems: usersNotesKeys,
         usersNotesList: usersNotesList
       });
+      console.log(this.state.usersNotesList)
     }.bind(this));    
+    
+
+/*    firebaseRef.child('users/' + authData.uid + '/notes').on('child_changed', function(noteKeySnapshot, prevChildKey) {
+    // code to handle child data changes.
+      console.log('something changed!');
+      console.log(noteKeySnapshot.key().toString());
+      // Look through the current note list and find the matching key and update that key with the new content.
+      // if this.usersNotesList[i]  
+      console.log(noteSnapshot);
+      firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
+        // console.log(noteSnapshot.val());
+        // Add that full note object to an array
+        // IMPORTANT: This needs to UPDATE an entry in the array, does Push do that? Or is there 
+        // a different function for that?
+        // usersNotesList.push(noteSnapshot.val());
+        for (var i in noteSnapshot) {
+           if (projects[i].data.note == "Write somethi21ng") {
+              console.log('found it')
+              break; //Stop this loop, we found it!
+           }
+         }
+      });
+    });
+*/
+    this.setState({
+      listItems: usersNotesKeys,
+      usersNotesList: usersNotesList
+    });
 
   },
 
@@ -123,16 +157,33 @@ var Pad = React.createClass({
       console.log('Sending to createNewNote');
     } else if (this.state.item){
       /* If an item exists, update that item */
-      var firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
+      // var firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
       /* Why does this only work if defined above? Shouldn't it pull in vars from other functions? */
-      var testRef = firebaseRef.child(this.state.item['.key']); 
+      var testRef = firebaseRef.child('/notes/' + this.state.item['key']); 
       /* This code sets the text of Codemirror */
       testRef.update({
         "note": this.state.code,
         "updated_at": Firebase.ServerValue.TIMESTAMP
       });
-      console.log(testRef);
+      console.log('ref', testRef.toString());
+      console.log(this.state.item['key']);
+      // var noteKey = this.state.item['key']
+      // userNoteKey = firebaseRef.child('users/' + this.state.authData.uid + '/' + this.state.item['.key']);
+      // userNoteKey.update({
+      //   noteKey : false
+      // });
+      // console.log(userNoteKey.toString());
+      // console.log(testRef);
       console.log('Updating existing note');
+
+      // firebaseRef.child('notes/' + this.state.item['.key']).on('child_changed', function(noteSnapshot, prevChildKey) {
+      // // code to handle child data changes.
+      //   console.log('something changed!');
+      //   console.log(this.state.item['.key'].toString());
+      //   // Look through the current note list and find the matching key and update that key with the new content.
+      //   // if this.usersNotesList[i]  
+      //   console.log(noteSnapshot);
+      // });
     }
     if (this.state.code != "Write something"){ 
       /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */
@@ -145,6 +196,7 @@ var Pad = React.createClass({
     /* This takes the actived note, and sets the state of Codemirror that that note's full text. */
     this.setState({
       code: clickedNote.note,
+      // NOTE: Not sure why this is spitting out an error. Doesn't seem to actually cause any issues. TODO.
       item: clickedNote
     });
   },

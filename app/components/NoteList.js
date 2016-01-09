@@ -53,7 +53,7 @@ var NoteList = React.createClass({
   activateNote: function(i, item) { 
     /* This takes the clicked note, and displays it's full content in the main text window */
     console.log('full note:' + item);
-    this.props.updateNoteArea(item, this.state.notes);
+    this.props.updateNoteArea(item, this.state.usersNotesList);
     /* this.props.updateNoteArea(item.note); */
   },
   render: function() {    

@@ -1403,6 +1403,7 @@ html {
   overflow: scroll;
   list-style-type: none;
   margin: 0;
+  padding-bottom: 300px;
 }
 .notes-list li {
   list-style-type: none;
