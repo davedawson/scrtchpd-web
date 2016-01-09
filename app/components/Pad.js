@@ -176,14 +176,26 @@ var Pad = React.createClass({
       // console.log(testRef);
       console.log('Updating existing note');
 
-      // firebaseRef.child('notes/' + this.state.item['.key']).on('child_changed', function(noteSnapshot, prevChildKey) {
-      // // code to handle child data changes.
-      //   console.log('something changed!');
-      //   console.log(this.state.item['.key'].toString());
-      //   // Look through the current note list and find the matching key and update that key with the new content.
-      //   // if this.usersNotesList[i]  
-      //   console.log(noteSnapshot);
-      // });
+      firebaseRef.child('notes/' + this.state.item['key']).on('value', function(noteSnapshot, prevChildKey) {
+      // code to handle child data changes.
+        // console.log('something changed!');
+        // console.log(this.state.item['key'].toString());
+        // Look through the current note list and find the matching key and update that key with the new content.
+        // if this.usersNotesList[i]  
+        console.log(noteSnapshot.val());
+        console.log(noteSnapshot);
+        var data = noteSnapshot.val();
+        updatedItem = {
+            'created_at': data.created_at, 
+            'updated_at': data.updated_at,
+            'note':       data.note,
+            'key':        noteSnapshot.key()
+            };
+            console.log(updatedItem);
+        this.setState({
+          item: updatedItem
+        });
+      }.bind(this));
     }
     if (this.state.code != "Write something"){ 
       /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */
@@ -199,6 +211,7 @@ var Pad = React.createClass({
       // NOTE: Not sure why this is spitting out an error. Doesn't seem to actually cause any issues. TODO.
       item: clickedNote
     });
+    console.log(clickedNote);
   },
   placeNewNote: function(){
     console.log('New Note, creating now');
