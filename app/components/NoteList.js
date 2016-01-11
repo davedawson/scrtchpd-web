@@ -56,6 +56,19 @@ var NoteList = React.createClass({
     this.props.updateNoteArea(item, this.state.usersNotesList);
     /* this.props.updateNoteArea(item.note); */
   },
+  handleDeleteNote: function(i, item) {
+    var onComplete = function(error) {
+      if (error) {
+        console.log('Synchronization failed');
+      } else {
+        console.log('Synchronization succeeded');
+      }
+    };
+    console.log('delete', item);
+    noteRef = new Firebase('https://scrtchpd.firebaseio.com/notes/' + item.key);
+    console.log(noteRef.toString());
+    noteRef.remove(onComplete);
+  },
   render: function() {    
     return (
       <ul className="notes-list" >      
@@ -64,7 +77,10 @@ var NoteList = React.createClass({
           var note = item.note.substring(0,50);
           return (
             /* Using this li element here, because the onClick function doesn't want to work on the Note compenent below */
-            <li onClick={this.activateNote.bind(this, i, item)} key={i}><strong><TimeAgo date={item.updated_at} /></strong>{note} {item['.key']}</li>
+            <li>
+              <p onClick={this.activateNote.bind(this, i, item)} key={i}><strong><TimeAgo date={item.updated_at} /></strong>{note} {item['.key']}</p>
+              <a className="delete-link" onClick={this.handleDeleteNote.bind(this, i, item)}>delete</a>
+            </li>
             /* <Note onClick={this.activateNote.bind(this, i, item)} item={item} key={i} /> */ 
           );
         }, this)}
