@@ -2,12 +2,12 @@ var React = require('react');
 var TimeAgo = require('react-timeago');
 var classNames = require('classnames');
 var Note = React.createClass({
-	activateNote: function(i, item) { 
+	activateNote: function(item) { 
     /* This takes the clicked note, and displays it's full content in the main text window */
     console.log('full note:' + item);
     this.props.updateNoteArea(item, this.state.usersNotesList);
   },
-  handleDeleteNote: function(i, item) {
+  handleDeleteNote: function(item) {
     var onComplete = function(error) {
       if (error) {
         console.log('Synchronization failed');
@@ -15,10 +15,14 @@ var Note = React.createClass({
         console.log('Synchronization succeeded');
       }
     };
+    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
     console.log('delete', item);
-    noteRef = new Firebase('https://scrtchpd.firebaseio.com/notes/' + item.key);
-    console.log(noteRef.toString());
-    noteRef.remove(onComplete);
+    note = firebaseRef.child('/notes/' + item.key);
+    userNoteKey = firebaseRef.child('users/' + this.props.auth.uid + '/notes/' + item.key)
+    console.log(note.toString());
+    console.log(userNoteKey.toString());
+    note.remove(onComplete);
+    userNoteKey.remove(onComplete);
   },
 	render: function() {
 		/* Take the full note and cut it down to 50 characters */

@@ -23,7 +23,7 @@ var NoteList = React.createClass({
             'btn-over': !this.state.isPressed && this.state.isHovered
           });
           return (
-            <Note noteData={item} noteDigit={i}  className={btnClass} />
+            <Note noteData={item} noteDigit={i}  className={btnClass} auth={this.props.auth} />
           );
         }, this)}
 
