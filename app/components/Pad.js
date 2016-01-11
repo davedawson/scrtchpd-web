@@ -67,7 +67,7 @@ var Pad = React.createClass({
         listItems: usersNotesKeys,
         usersNotesList: usersNotesList
       });
-      console.log(this.state.usersNotesList)
+      
     }.bind(this));    
     
 
@@ -116,7 +116,7 @@ var Pad = React.createClass({
     var list = ['baconing', 'narwhal', 'a mighty bear canoe'];
     var list2 = this.state.usersNotesList;
     var results = fuzzy.filter(queryText, list2, options)
-    console.log(results);
+    // console.log(results);
     /* var matches = results.map(function(el) { return el; });
     console.log(matches);
     */
@@ -165,8 +165,7 @@ var Pad = React.createClass({
         "note": this.state.code,
         "updated_at": Firebase.ServerValue.TIMESTAMP
       });
-      console.log('ref', testRef.toString());
-      console.log(this.state.item['key']);
+
       // var noteKey = this.state.item['key']
       // userNoteKey = firebaseRef.child('users/' + this.state.authData.uid + '/' + this.state.item['.key']);
       // userNoteKey.update({
@@ -178,12 +177,8 @@ var Pad = React.createClass({
 
       firebaseRef.child('notes/' + this.state.item['key']).on('value', function(noteSnapshot, prevChildKey) {
       // code to handle child data changes.
-        // console.log('something changed!');
-        // console.log(this.state.item['key'].toString());
         // Look through the current note list and find the matching key and update that key with the new content.
-        // if this.usersNotesList[i]  
-        console.log(noteSnapshot.val());
-        console.log(noteSnapshot);
+
         var data = noteSnapshot.val();
         updatedItem = {
             'created_at': data.created_at, 
@@ -191,7 +186,7 @@ var Pad = React.createClass({
             'note':       data.note,
             'key':        noteSnapshot.key()
             };
-            console.log(updatedItem);
+            // console.log(updatedItem);
         this.setState({
           item: updatedItem
         });
@@ -211,7 +206,7 @@ var Pad = React.createClass({
       // NOTE: Not sure why this is spitting out an error. Doesn't seem to actually cause any issues. TODO.
       item: clickedNote
     });
-    console.log(clickedNote);
+    
   },
   placeNewNote: function(){
     console.log('New Note, creating now');
@@ -280,7 +275,6 @@ var Pad = React.createClass({
       this.bindAsObject(newNoteRef, "item");
       this.setState({code: this.code });
       newNoteKey = newNoteRef.key();
-      console.log(this.state.authData.uid);
       var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
       var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
       /* var newNoteUserRef = userNotesRef.push({"user": true, "test3": false, "test4": "testing"}); */
