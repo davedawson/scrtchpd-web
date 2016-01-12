@@ -22,6 +22,7 @@ var Pad = React.createClass({
       counter: 0,
       query:'',
       notes: [],
+      listItems: [],
       usersNotesList: [],
       codePlaceholder: "Write something!",
     };
@@ -40,7 +41,9 @@ var Pad = React.createClass({
     this.setState({
       authData: authData
     });
-
+    var addToItemList = function(note) {
+      console.log('note:', note);
+    };
 
     // User specific notes
     usersNotesKeys = []
@@ -49,9 +52,30 @@ var Pad = React.createClass({
     firebaseRef.child('users/' + authData.uid + '/notes').orderByChild('date_updated').on("child_added", function(noteKeySnapshot) {
       // console.log(noteKeySnapshot.key());
       // Take each key and add it to an array  - TODO: I think this is unnecessary, but is helpful to have for testing. Remove. 
+      // base.syncState('notes/' + noteKeySnapshot.key(), {
+      //   context: this,
+      //   state: this.state.listItems.concat([noteKeySnapshot.key()])},
+      //   asArray: false,
+      //   then: function() {
+      //     // this.setState({listItems: this.state.listItems.concat([this])});
+      //   }
+      // });
+      ref = firebaseRef.child('notes/' + noteKeySnapshot.key());
+      // For each note key, go and fetch the Note record with the same key
+      var noteObject = this.bindAsObject(ref, noteKeySnapshot.key()); 
+      addToItemList(noteObject);
+
+      // usersNotesList.push(keyObject);
+      this.setState({
+        usersNotesList: usersNotesList
+      });
+
+
+      // Original way of doing thing. Not working well: 
+      /* 
       usersNotesKeys.push(noteKeySnapshot.key());
       // For each note key, go and fetch the Note record with the same key
-       
+      this.bindAsObject(ref, noteKeySnapshot.key()); 
       firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
         // Add that full note object to an array + the parent key
         var data = noteSnapshot.val();
@@ -67,6 +91,7 @@ var Pad = React.createClass({
         listItems: usersNotesKeys,
         usersNotesList: usersNotesList
       });
+    */
       
     }.bind(this));    
     
@@ -101,7 +126,7 @@ var Pad = React.createClass({
   },
 
   componentDidMount: function() {
-
+    console.log(this.state.listItems);
   },
 
   doSearch:function(queryText){
@@ -283,6 +308,7 @@ var Pad = React.createClass({
 
   },
   render: function() {
+    console.log(this.state.listItems);
       var options = {
         mode: {
           name: "gfm",
