@@ -1,8 +1,10 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var SearchBar = require('./SearchBar.js');
 var NoteList = require('./NoteList.js');
 var Router = require('react-router');
 var Link = require('react-router').Link
+var classNames = require('classnames');
 
 var fuzzy = require('fuzzy');
 var Rebase = require('re-base');
@@ -26,7 +28,7 @@ var Pad = React.createClass({
       userNotesTest: [],
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
-      sidebarOpen: true
+      sidebarOpen: false
     };
   },
 
@@ -314,6 +316,7 @@ var Pad = React.createClass({
     this.setState({
       sidebarOpen: !this.state.sidebarOpen
     });
+    ReactDOM.getInputDOMNode(this.refs.searchInput).focus(); 
   },
   render: function() {
     console.log(this.state.listItems);
@@ -337,6 +340,10 @@ var Pad = React.createClass({
         loginOrOut = <li><Link to="login" className="navbar-brand">Login</Link></li>;
         register = <li><Link to="register" className="navbar-brand"> Register </Link></li>;
       }
+      var sidebarClass = classNames({
+        'sidebar': true,
+        'open': this.state.sidebarOpen
+      });
       return (
           <div>
             <div className="buttons">
@@ -348,10 +355,9 @@ var Pad = React.createClass({
               </div>
             </div>
             <div className="pad-container">
-              {this.state.sidebarOpen ? 
-                <div className="sidebar">
+              <div className={sidebarClass}>
 
-                  <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
+                  <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
                   <div className="notes">
                     <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
                   </div>
@@ -359,9 +365,6 @@ var Pad = React.createClass({
                   {loginOrOut}
                   <li><Link to="pad">Pad</Link></li>
                 </div>
-                :
-                null
-              }
               
               <section className="writer">
                 <Codemirror value={this.state.code} options={options} onChange={this.updateCode} placeholder="testing placeholder" />

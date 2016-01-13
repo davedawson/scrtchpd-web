@@ -54,6 +54,11 @@ var App = React.createClass({
       }
       return (
           <div>
+            <li><Link to="/">Home</Link></li>
+            
+            {register}
+            
+            {loginOrOut}
             {this.props.children}
           </div>
       );

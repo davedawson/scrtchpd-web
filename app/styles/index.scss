@@ -79,6 +79,26 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 
 
+input, textarea {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 16px;
+  line-height: 24px;
+  border: 1px solid rgba(0,0,0,0.3);
+  -webkit-appearance: none;
+}
+input[type=submit], button[type=submit] {
+  background: black;
+  color: white;
+  border: 0;
+  text-decoration: none;
+  padding: 8px 15px;
+  font-size: 16px;
+  display: block;
+  width: 100%;
+  // margin-top: 20px;
+}
+
 
 /* Webfont declarations */
 /*@font-face {
@@ -1382,16 +1402,19 @@ html {
   display: flex;
   height: 100%;
   .sidebar {
-    width: 30%;
-    // position: relative;
-    // overflow: scroll;
     height: 100%;
+    width: 30%;
+    transition: all, 0.3s;
+    transform: translateX(-100%);
+    &.open {
+      display: block;
+      transform: translateX(0);
+    }
   }
   .writer {
     width: 65%;
     height: 100%;
     margin: 0 auto;
-    // z-index: 1;
   }
 }
 
@@ -1465,4 +1488,26 @@ html {
   position: absolute;
   top: 20px;
   right: 20px;
+}
+
+.account-page {
+  h1 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .form-wrap {
+    width: 50%;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+  input, button {
+    margin-bottom: 20px;
+  }
+  p {
+    font-size: 14px;
+    line-height: 1.2em;
+  }
 }
