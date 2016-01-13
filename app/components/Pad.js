@@ -56,11 +56,11 @@ var Pad = React.createClass({
       // console.log(noteKeySnapshot.key());
       // Take each key and add it to an array  - TODO: I think this is unnecessary, but is helpful to have for testing. Remove. 
       // base.syncState({context: this.state.notes, state: noteKey })
-      base.syncState('notes/' + noteKeySnapshot.key(), {
-        context: this.state.userNotes,
-        state: noteKeySnapshot.key(),
-        asArray: false,
-      });
+      // base.syncState('notes/' + noteKeySnapshot.key(), {
+      //   context: this.state.userNotes,
+      //   state: noteKeySnapshot.key(),
+      //   asArray: false,
+      // });
       // ref = firebaseRef.child('notes/' + noteKeySnapshot.key());
       // For each note key, go and fetch the Note record with the same key
       // var noteObject = this.bindAsObject(ref, noteKeySnapshot.key()); 
@@ -73,10 +73,10 @@ var Pad = React.createClass({
 
 
       // Original way of doing thing. Not working well: 
-      /* 
+      
       usersNotesKeys.push(noteKeySnapshot.key());
       // For each note key, go and fetch the Note record with the same key
-      this.bindAsObject(ref, noteKeySnapshot.key()); 
+      // this.bindAsObject(ref, noteKeySnapshot.key()); 
       firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
         // Add that full note object to an array + the parent key
         var data = noteSnapshot.val();
@@ -92,7 +92,7 @@ var Pad = React.createClass({
         listItems: usersNotesKeys,
         usersNotesList: usersNotesList
       });
-    */
+    
       
     }.bind(this));    
     
