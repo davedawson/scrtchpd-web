@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var SearchBar = require('./SearchBar.js');
 var NoteList = require('./NoteList.js');
