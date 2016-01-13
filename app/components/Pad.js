@@ -26,7 +26,7 @@ var Pad = React.createClass({
       userNotesTest: [],
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
-      sidebarOpen: false
+      sidebarOpen: true
     };
   },
 
@@ -339,34 +339,36 @@ var Pad = React.createClass({
       }
       return (
           <div>
-            <li><Link to="pad">Pad</Link></li>
-            <div className="menu-button" onClick={this.expandSidebar}>
-              Menu
-            </div>
-            {this.state.sidebarOpen ? 
-              <div className="archive">
-                <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
-                <div className="notes">
-                  <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
-                </div>
-                {register}
-              
-                {loginOrOut}
+            <div className="buttons">
+              <div className="menu-button main-button" onClick={this.expandSidebar}>
+                Menu
               </div>
-              :
-              null
-            }
-            
-            <section className="writer">
-              <Codemirror value={this.state.code} options={options} onChange={this.updateCode} placeholder="testing placeholder" />
-            </section>
-            <div className="border">
-              <ul>
-                <li className="clear"><a className="call-modal" onClick={this.clearText}><span>&times;</span></a></li>
-                <li className="character-count"><span onClick={this.onClick}></span></li>
-                <li><a onClick={this.placeNewNote}>New note</a></li>
-              </ul>
+              <div className="new-note-button main-button" onClick={this.placeNewNote}>
+                New note
+              </div>
             </div>
+            <div className="pad-container">
+              {this.state.sidebarOpen ? 
+                <div className="sidebar">
+
+                  <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
+                  <div className="notes">
+                    <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
+                  </div>
+                  {register}
+                  {loginOrOut}
+                  <li><Link to="pad">Pad</Link></li>
+                </div>
+                :
+                null
+              }
+              
+              <section className="writer">
+                <Codemirror value={this.state.code} options={options} onChange={this.updateCode} placeholder="testing placeholder" />
+                <li className="character-count"><span onClick={this.onClick}></span></li>
+                <li className="clear"><a className="call-modal" onClick={this.clearText}><span>&times;</span></a></li>
+              </section>
+              </div>
           </div>
       );
   }

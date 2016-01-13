@@ -177,12 +177,12 @@ textarea {
   z-index: 2;
 }
 
-.sidebar {
-  float: left;
-  width: 29%;
-  height: 100%;
-  display: none;
-}
+// .sidebar {
+//   float: left;
+//   width: 29%;
+//   height: 100%;
+//   display: none;
+// }
 
 .writer {
   width: 100%;
@@ -1378,6 +1378,30 @@ html {
   float: right;
 }
 
+.pad-container {
+  display: flex;
+  height: 100%;
+  .sidebar {
+    width: 30%;
+    // position: relative;
+    // overflow: scroll;
+    height: 100%;
+  }
+  .writer {
+    width: 65%;
+    height: 100%;
+    margin: 0 auto;
+    // z-index: 1;
+  }
+}
+
+.search-box {
+  width: 100%;
+  padding: 15px 7px;
+  font-size: 16px;
+  border-radius: 0;
+}
+
 
 .character-count {
   /*position: absolute;*/
@@ -1392,9 +1416,7 @@ html {
   font-size: 12px;
 }
 .archive {
-  width: 30%;
-  position: fixed;
-  overflow: scroll;
+  
 }
 .notes-list {
   float: left;
@@ -1421,6 +1443,26 @@ html {
 }
 
 .writer {
-  float: right;
-  width: 65%;
+  
+}
+
+.buttons {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  z-index: 3;
+}
+.main-button {
+  position: relative;
+  z-index: 3;
+}
+.menu-button {
+  position: relative;
+  top: 20px;
+  left: 20px;
+}
+.new-note-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }

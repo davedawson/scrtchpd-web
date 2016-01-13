@@ -19,7 +19,7 @@ var SearchBar = React.createClass({
   render: function() {
     return (
       <form>
-         <input type="search" ref="searchInput" value={this.props.query} onChange={this.doSearch} />
+         <input type="text" ref="searchInput" className="search-box" placeholder="Search your notes" value={this.props.query} onChange={this.doSearch} />
       </form>
     )
   }
