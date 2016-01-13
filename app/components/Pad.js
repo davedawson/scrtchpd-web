@@ -7,9 +7,11 @@ var Link = require('react-router').Link
 var fuzzy = require('fuzzy');
 var Rebase = require('re-base');
 var Codemirror = require('react-codemirror');
-    require('../../node_modules/codemirror/mode/markdown/markdown.js')
-    require('../../node_modules/codemirror/mode/gfm/gfm.js');
-    require('../../node_modules/codemirror/addon/display/placeholder.js');
+var firebaseRef;
+var base;
+    // require('../../node_modules/codemirror/mode/markdown/markdown.js')
+    // require('../../node_modules/codemirror/mode/gfm/gfm.js');
+    // require('../../node_modules/codemirror/addon/display/placeholder.js');
 
 var Pad = React.createClass({
   mixins: [ReactFireMixin],
@@ -21,7 +23,7 @@ var Pad = React.createClass({
       query:'',
       notes: [],
       listItems: [],
-      usersNotesList: [],
+      usersNotesList: new Object(),
       codePlaceholder: "Write something!",
     };
   },
@@ -42,31 +44,32 @@ var Pad = React.createClass({
     var addToItemList = function(note) {
       console.log('note:', note);
     };
-
+    var usersNotesListTest = new Object();
     // User specific notes
-    usersNotesKeys = []
-    usersNotesList = []
+    var usersNotesKeys = []
+    var usersNotesList = []
+    this.setState({
+      usersNotesListTest: []
+    })
     // Grab the user's notes keys and loop through them
     firebaseRef.child('users/' + authData.uid + '/notes').orderByChild('date_updated').on("child_added", function(noteKeySnapshot) {
       // console.log(noteKeySnapshot.key());
       // Take each key and add it to an array  - TODO: I think this is unnecessary, but is helpful to have for testing. Remove. 
-      // base.syncState('notes/' + noteKeySnapshot.key(), {
-      //   context: this,
-      //   state: this.state.listItems.concat([noteKeySnapshot.key()])},
-      //   asArray: false,
-      //   then: function() {
-      //     // this.setState({listItems: this.state.listItems.concat([this])});
-      //   }
-      // });
-      ref = firebaseRef.child('notes/' + noteKeySnapshot.key());
+      // base.syncState({context: this.state.notes, state: noteKey })
+      base.syncState('notes/' + noteKeySnapshot.key(), {
+        context: this.state.userNotes,
+        state: noteKeySnapshot.key(),
+        asArray: false,
+      });
+      // ref = firebaseRef.child('notes/' + noteKeySnapshot.key());
       // For each note key, go and fetch the Note record with the same key
-      var noteObject = this.bindAsObject(ref, noteKeySnapshot.key()); 
-      addToItemList(noteObject);
+      // var noteObject = this.bindAsObject(ref, noteKeySnapshot.key()); 
+      // addToItemList(noteObject);
 
       // usersNotesList.push(keyObject);
-      this.setState({
-        usersNotesList: usersNotesList
-      });
+      // this.setState({
+      //   usersNotesList: usersNotesList
+      // });
 
 
       // Original way of doing thing. Not working well: 

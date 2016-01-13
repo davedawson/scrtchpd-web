@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var firebaseUtils = require('../utils/firebaseUtils');
 var Pad = require('./Pad.js');
@@ -11,9 +9,9 @@ var fbutil = require('firebase-util');
 
 var fuzzy = require('fuzzy');
 var Codemirror = require('react-codemirror');
-    require('../../node_modules/codemirror/mode/markdown/markdown.js')
-    require('../../node_modules/codemirror/mode/gfm/gfm.js');
-    require('../../node_modules/codemirror/addon/display/placeholder.js');
+    // require('../../node_modules/codemirror/mode/markdown/markdown.js')
+    // require('../../node_modules/codemirror/mode/gfm/gfm.js');
+    // require('../../node_modules/codemirror/addon/display/placeholder.js');
 
 var App = React.createClass({
   mixins: [ReactFireMixin],
@@ -56,12 +54,11 @@ var App = React.createClass({
       }
       return (
           <div>
-          {this.state.loggedIn.uid}
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="pad">Pad</Link></li>
-          {register}
-          {loginOrOut}
-
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="pad">Pad</Link></li>
+            {register}
+            
+            {loginOrOut}
             {this.props.children}
           </div>
       );

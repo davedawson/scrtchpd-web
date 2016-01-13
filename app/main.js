@@ -3,7 +3,9 @@ var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var routes = require('./config/routes');
 
+import './styles/index.scss';
+
 ReactDOM.render(
 	<Router>{routes}</Router>,
-	document.getElementById('app')
+	document.getElementById('root')
 );
