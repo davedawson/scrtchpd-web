@@ -6,10 +6,10 @@ var Register = React.createClass({
   mixins: [ Router.Navigation ],
   handleSubmit: function(e){
     e.preventDefault();
-    var email = this.refs.email.getDOMNode().value;
-    var pw = this.refs.pw.getDOMNode().value;
-    var firstName = this.refs.firstName.getDOMNode().value;
-    var lastName = this.refs.lastName.getDOMNode().value;
+    var email = this.refs.email.value;
+    var pw = this.refs.pw.value;
+    var firstName = this.refs.firstName.value;
+    var lastName = this.refs.lastName.value;
     firebaseUtils.createUser({
       email: email,
       firstName: firstName, 

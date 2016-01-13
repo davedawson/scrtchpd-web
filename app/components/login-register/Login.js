@@ -13,20 +13,7 @@ var Login = React.createClass({
       error: false
     }
   },
-  handleSubmit: function(e){
-    e.preventDefault();
-    var email = this.refs.email.getDOMNode().value;
-    var pw = this.refs.pw.getDOMNode().value;
-    firebaseUtils.loginWithPW({email: email, password: pw}, function(){
-      if(Login.attemptedTransition){
-        var transition = Login.attemptedTransition;
-        Login.attemptedTransition = null;
-        transition.retry();
-      } else {
-        this.replaceWith('pad');
-      }
-    }.bind(this));
-  },
+  
   render: function(){
     var errors = this.state.error ? <p> Error on Login </p> : '';
     return (
@@ -47,7 +34,21 @@ var Login = React.createClass({
         </div>
       </div>
     );
-  }
+  },
+  handleSubmit: function(e){
+    e.preventDefault();
+    var email = this.refs.email.value;
+    var pw = this.refs.pw.value;
+    firebaseUtils.loginWithPW({email: email, password: pw}, function(){
+      if(Login.attemptedTransition){
+        var transition = Login.attemptedTransition;
+        Login.attemptedTransition = null;
+        transition.retry();
+      } else {
+        this.replaceWith('pad');
+      }
+    }.bind(this));
+  },
 });
 
 module.exports = Login;
