@@ -23,8 +23,10 @@ var Pad = React.createClass({
       query:'',
       notes: [],
       listItems: [],
+      userNotesTest: [],
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
+      sidebarOpen: false
     };
   },
 
@@ -55,9 +57,9 @@ var Pad = React.createClass({
     firebaseRef.child('users/' + authData.uid + '/notes').orderByChild('date_updated').on("child_added", function(noteKeySnapshot) {
       // console.log(noteKeySnapshot.key());
       // Take each key and add it to an array  - TODO: I think this is unnecessary, but is helpful to have for testing. Remove. 
-      // base.syncState({context: this.state.notes, state: noteKey })
+      // var notesRefTest = this.state.userNotesTest;
       // base.syncState('notes/' + noteKeySnapshot.key(), {
-      //   context: this.state.userNotes,
+      //   context: notesRefTest,
       //   state: noteKeySnapshot.key(),
       //   asArray: false,
       // });
@@ -308,6 +310,11 @@ var Pad = React.createClass({
       this.unbind("item");
 
   },
+  expandSidebar: function(){
+    this.setState({
+      sidebarOpen: !this.state.sidebarOpen
+    });
+  },
   render: function() {
     console.log(this.state.listItems);
       var options = {
@@ -321,15 +328,35 @@ var Pad = React.createClass({
         extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
         placeholder: "TESTING placeholder"
       };
-      
+      var loginOrOut;
+      var register;
+      if(this.state.authData){
+        loginOrOut = <li><Link to="logout" className="navbar-brand">Logout</Link></li>;
+        register = null
+      } else {
+        loginOrOut = <li><Link to="login" className="navbar-brand">Login</Link></li>;
+        register = <li><Link to="register" className="navbar-brand"> Register </Link></li>;
+      }
       return (
           <div>
-            <div className="archive">
-              <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
-              <div className="notes">
-                <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
-              </div>
+            <li><Link to="pad">Pad</Link></li>
+            <div className="menu-button" onClick={this.expandSidebar}>
+              Menu
             </div>
+            {this.state.sidebarOpen ? 
+              <div className="archive">
+                <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} />
+                <div className="notes">
+                  <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
+                </div>
+                {register}
+              
+                {loginOrOut}
+              </div>
+              :
+              null
+            }
+            
             <section className="writer">
               <Codemirror value={this.state.code} options={options} onChange={this.updateCode} placeholder="testing placeholder" />
             </section>

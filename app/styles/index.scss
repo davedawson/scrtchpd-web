@@ -1391,19 +1391,21 @@ html {
   color: #fff;
   font-size: 12px;
 }
-
+.archive {
+  width: 30%;
+  position: fixed;
+  overflow: scroll;
+}
 .notes-list {
   float: left;
   background: rgba(0,0,0,0.03);
   border-right: 1px solid rgba(0,0,0,0.05);
-  width: 30%;
   padding: 0 15px;
   height: 100%;
-  position: fixed;
-  overflow: scroll;
   list-style-type: none;
   margin: 0;
   padding-bottom: 300px;
+  width: 100%;
 }
 .notes-list li {
   list-style-type: none;
