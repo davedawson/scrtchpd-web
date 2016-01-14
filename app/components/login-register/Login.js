@@ -1,10 +1,13 @@
 var React = require('react');
-var Router = require('react-router');
+var ReactRouter = require('react-router');
 var Link = require('react-router').Link
 var firebaseUtils = require('../../utils/firebaseUtils');
+var Navigation = ReactRouter.Navigation;
+var History = ReactRouter.History;
+
 
 var Login = React.createClass({
-  mixins: [Router.Navigation],
+  mixins: [History],
   statics: {
     attemptedTransition: null
   },
@@ -50,7 +53,8 @@ var Login = React.createClass({
       } else {
         console.log('submitted');
         // Router.replaceWith('pad');
-        this.context.router.transitionTo('pad');
+        // this.context.router.transitionTo('pad');
+        this.history.pushState(null, '/pad');
       }
     }.bind(this));
   },
