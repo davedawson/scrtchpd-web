@@ -8,6 +8,9 @@ var Login = React.createClass({
   statics: {
     attemptedTransition: null
   },
+  contextTypes: {
+    router: React.PropTypes.func
+  },
   getInitialState: function(){
     return {
       error: false
@@ -45,7 +48,9 @@ var Login = React.createClass({
         Login.attemptedTransition = null;
         transition.retry();
       } else {
-        this.replaceWith('pad');
+        console.log('submitted');
+        // Router.replaceWith('pad');
+        this.context.router.transitionTo('pad');
       }
     }.bind(this));
   },

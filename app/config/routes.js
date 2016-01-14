@@ -22,7 +22,7 @@ module.exports = (
 */
 
 	<Route path="/" component={App}>
-		<Route name="home" path="/" component={Home} />
+		<Route name="home" path="/" component={Pad} />
     <Route name="pad" path="pad" component={Pad} />
     <Route name="login" path="login" component={Login} />    
     <Route name="logout" path="logout" component={Logout} />    
