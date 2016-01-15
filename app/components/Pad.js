@@ -52,19 +52,59 @@ var Pad = React.createClass({
     // User specific notes
     var usersNotesKeys = []
     var usersNotesList = []
+    var userNotesTest = []
+    var allNotesTest = []
     this.setState({
       usersNotesListTest: []
     })
     // Grab the user's notes keys and loop through them
+
+    // base.syncState('notes/', {
+    //   context: this,
+    //   asArray: true,
+    //   then(notesData){
+    //     notesData.forEach((note) => {
+    //       console.log(note);
+    //     });
+
+    //     // this.setState({total});
+    //   }
+    // });]
+
+    // firebaseRef.child('notes').orderByChild('date_updated').on("child_added", function(noteSnapshot) {
+    //   allNotesTest.push(noteSnapshot);
+    //   console.log(allNotesTest);
+    // });
+    // this.setState({
+    //   allNotesTest: allNotesTest
+    // });
+    // firebaseRef.child('users/' + authData.uid + '/notes').orderByChild('date_updated').on("child_added", function(noteKeySnapshot) {
+    //     // var ref = firebaseRef.child('notes/' + noteKeySnapshot.key());
+    //     // this.bindAsObject(ref, noteKeySnapshot.key()); 
+    //     var ref = firebaseRef.child('users/' + authData.uid + '/notes');
+    //     var query = ref.orderByChild('date_updated');
+    //     this.bindAsArray(query, "notes");
+
+    // }.bind(this)); 
     firebaseRef.child('users/' + authData.uid + '/notes').orderByChild('date_updated').on("child_added", function(noteKeySnapshot) {
       // console.log(noteKeySnapshot.key());
       // Take each key and add it to an array  - TODO: I think this is unnecessary, but is helpful to have for testing. Remove. 
       // var notesRefTest = this.state.userNotesTest;
-      // base.syncState('notes/' + noteKeySnapshot.key(), {
-      //   context: notesRefTest,
+      // base.listenTo('notes/' + noteKeySnapshot.key(), {
+      //   context: this,
       //   state: noteKeySnapshot.key(),
       //   asArray: false,
+      //   then: function(notesData) {
+      //     // usersNotesList.push(keyObject);
+      //     console.log(notesData);
+      //     usersNotesList.push(notesData);
+      //   }
       // });
+      // this.setState({
+      //   usersNotesList: usersNotesList
+      // });
+
+
       // ref = firebaseRef.child('notes/' + noteKeySnapshot.key());
       // For each note key, go and fetch the Note record with the same key
       // var noteObject = this.bindAsObject(ref, noteKeySnapshot.key()); 
@@ -75,6 +115,18 @@ var Pad = React.createClass({
       //   usersNotesList: usersNotesList
       // });
 
+      // base.syncState('notes/' + noteKeySnapshot.key(), {
+      //   context: this,
+      //   state: noteKeySnapshot.key(),
+      //   asArray: false,
+      //   then(notesData){
+      //     userNotesTest.push(notesData);
+      //     // this.setState({total});
+      //   }
+      // });
+      // this.setState({
+      //   userNotesTest: userNotesTest
+      // });
 
       // Original way of doing thing. Not working well: 
       
@@ -123,10 +175,19 @@ var Pad = React.createClass({
       });
     });
 */
+
     this.setState({
       listItems: usersNotesKeys,
       usersNotesList: usersNotesList
     });
+
+    // base.syncState('notes', {
+    //   context: this,
+    //   state: 'notesTEst',
+    //   asArray: true
+    // });
+
+
 
   },
 
