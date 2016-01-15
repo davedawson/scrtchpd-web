@@ -26,9 +26,11 @@ var Pad = React.createClass({
       notes: [],
       listItems: [],
       userNotesTest: [],
+      userNotesKeys: [],
+      userNoteKeys: [],
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
-      sidebarOpen: false
+      sidebarOpen: true
     };
   },
 
@@ -70,6 +72,14 @@ var Pad = React.createClass({
     //     // this.setState({total});
     //   }
     // });]
+    // base.syncState('users/' + authData.uid + '/notes', {
+    //   context: this,
+    //   state: 'userNoteKeys',
+    //   asArray: true,
+    // });
+    var ref = firebaseRef.child('users/' + authData.uid + '/notes');
+    var query = ref.orderByChild('date_updated');
+    this.bindAsArray(query, 'userNoteKeys'); 
 
     // firebaseRef.child('notes').orderByChild('date_updated').on("child_added", function(noteSnapshot) {
     //   allNotesTest.push(noteSnapshot);
@@ -192,7 +202,7 @@ var Pad = React.createClass({
   },
 
   componentDidMount: function() {
-    console.log(this.state.listItems);
+    // console.log(this.state.listItems);
   },
 
   doSearch:function(queryText){
@@ -420,7 +430,7 @@ var Pad = React.createClass({
 
                   <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
                   <div className="notes">
-                    <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
+                    <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} noteKeys={this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
                   </div>
                   {register}
                   {loginOrOut}

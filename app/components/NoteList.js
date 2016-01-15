@@ -16,14 +16,15 @@ var NoteList = React.createClass({
   render: function() {    
     return (
       <ul className="notes-list" >      
-        {this.props.notes.map(function(item, i) {          
+        {this.props.noteKeys.map(function(item, i) {          
           var btnClass = classNames({
             'btn': true,
             'btn-pressed': this.state.isPressed,
             'btn-over': !this.state.isPressed && this.state.isHovered
           });
+          console.log(item);
           return (
-            <Note noteData={item} noteDigit={i}  className={btnClass} auth={this.props.auth} />
+            <Note noteKey={item} noteDigit={i}  className={btnClass} auth={this.props.auth} />
           );
         }, this)}
 

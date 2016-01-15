@@ -1,11 +1,27 @@
 var React = require('react');
 var TimeAgo = require('react-timeago');
 var classNames = require('classnames');
+var Rebase = require('re-base');
+var firebaseRef;
+var base;
 var Note = React.createClass({
+  mixins: [ReactFireMixin],
   getInitialState: function(){
     return {
       isHovering: ''
     }
+  },
+  componentWillMount: function() {
+    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
+    // var ref = firebaseRef.child('notes/' + this.props.noteKey['.key']);
+    // this.bindAsArray(ref, 'key'); 
+    base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
+    base.syncState('notes/' + this.props.noteKey['.key'], {
+      context: this,
+      state: 'key',
+      asArray: true,
+    });
+    console.log(this.props.noteKey['.key']);
   },
 	activateNote: function(item) { 
     /* This takes the clicked note, and displays it's full content in the main text window */
@@ -49,11 +65,10 @@ var Note = React.createClass({
   },
 	render: function() {
 		/* Take the full note and cut it down to 50 characters */
-		var note = this.props.noteData.note.substring(0,50);
+		
 		return (
 			<li onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
-        <p onClick={this.activateNote.bind(this, this.props.noteData)} key={this.props.noteDigit}><strong><TimeAgo date={this.props.noteData.updated_at} /></strong>{note} {this.props.noteData['.key']}</p>
-        { this.state.isHovering ? <a className="delete-link" onClick={this.handleDeleteNote.bind(this, this.props.noteData)}>delete</a> : null }
+        {this.state.key}
         
       </li>
 		)
