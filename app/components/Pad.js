@@ -276,22 +276,22 @@ var Pad = React.createClass({
       // console.log(testRef);
       console.log('Updating existing note');
 
-      firebaseRef.child('notes/' + this.state.item['key']).on('value', function(noteSnapshot, prevChildKey) {
-      // code to handle child data changes.
-        // Look through the current note list and find the matching key and update that key with the new content.
+      // firebaseRef.child('notes/' + this.state.item['key']).on('value', function(noteSnapshot, prevChildKey) {
+      // // code to handle child data changes.
+      //   // Look through the current note list and find the matching key and update that key with the new content.
 
-        var data = noteSnapshot.val();
-        updatedItem = {
-            'created_at': data.created_at, 
-            'updated_at': data.updated_at,
-            'note':       data.note,
-            'key':        noteSnapshot.key()
-            };
-            // console.log(updatedItem);
-        this.setState({
-          item: updatedItem
-        });
-      }.bind(this));
+      //   var data = noteSnapshot.val();
+      //   updatedItem = {
+      //       'created_at': data.created_at, 
+      //       'updated_at': data.updated_at,
+      //       'note':       data.note,
+      //       'key':        noteSnapshot.key()
+      //       };
+      //       // console.log(updatedItem);
+      //   this.setState({
+      //     item: updatedItem
+      //   });
+      // }.bind(this));
     }
     if (this.state.code != "Write something"){ 
       /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */
@@ -300,12 +300,13 @@ var Pad = React.createClass({
     }
     
   },
-  handleNoteAreaUpdate: function(clickedNote, notes){
+  handleNoteAreaUpdate: function(clickedNote){
     /* This takes the actived note, and sets the state of Codemirror that that note's full text. */
+    console.log(clickedNote);
     this.setState({
-      code: clickedNote.note,
+      code: clickedNote.toString(),
       // NOTE: Not sure why this is spitting out an error. Doesn't seem to actually cause any issues. TODO.
-      item: clickedNote
+      item: 'clickedNote'
     });
     
   },

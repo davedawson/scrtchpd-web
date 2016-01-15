@@ -12,6 +12,15 @@ var NoteList = React.createClass({
     
     };
   },
+
+  activateNote: function(item) { 
+    /* This takes the clicked note, and displays it's full content in the main text window */
+    console.log('full note:' + item);
+    this.props.updateNoteArea(item);
+    // this.setState({
+    //   isActive: true
+    // })
+  },
   
   render: function() {    
     return (
@@ -22,9 +31,9 @@ var NoteList = React.createClass({
             'btn-pressed': this.state.isPressed,
             'btn-over': !this.state.isPressed && this.state.isHovered
           });
-          console.log(item);
+          // console.log(item);
           return (
-            <Note noteKey={item} noteDigit={i}  className={btnClass} auth={this.props.auth} />
+            <Note noteKey={item} noteDigit={i}  className={btnClass} auth={this.props.auth} onClick={this.activateNote.bind(this, item)}  />
           );
         }, this)}
 

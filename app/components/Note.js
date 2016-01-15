@@ -18,7 +18,7 @@ var Note = React.createClass({
     base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
     base.syncState('notes/' + this.props.noteKey['.key'], {
       context: this,
-      state: 'key',
+      state: 'note',
       asArray: true,
     });
     console.log(this.props.noteKey['.key']);
@@ -67,9 +67,8 @@ var Note = React.createClass({
 		/* Take the full note and cut it down to 50 characters */
 		
 		return (
-			<li onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
-        {this.state.key}
-        
+			<li onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.props.onClick}>
+        {this.state.note}        
       </li>
 		)
 	}
