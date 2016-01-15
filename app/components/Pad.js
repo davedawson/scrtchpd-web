@@ -10,6 +10,7 @@ var fuzzy = require('fuzzy');
 var Rebase = require('re-base');
 var Codemirror = require('react-codemirror');
 var firebaseRef;
+var activeNoteRef;
 var base;
     // require('../../node_modules/codemirror/mode/markdown/markdown.js')
     // require('../../node_modules/codemirror/mode/gfm/gfm.js');
@@ -260,7 +261,7 @@ var Pad = React.createClass({
       /* If an item exists, update that item */
       // var firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
       /* Why does this only work if defined above? Shouldn't it pull in vars from other functions? */
-      var testRef = firebaseRef.child('/notes/' + this.state.item['key']); 
+      var testRef = firebaseRef.child('/notes/' + this.state.activeNoteKey); 
       /* This code sets the text of Codemirror */
       testRef.update({
         "note": this.state.code,
@@ -300,15 +301,35 @@ var Pad = React.createClass({
     }
     
   },
-  handleNoteAreaUpdate: function(clickedNote){
+  handleNoteAreaUpdate: function(clickedNote, clickedNoteKey){
     /* This takes the actived note, and sets the state of Codemirror that that note's full text. */
-    console.log(clickedNote);
-    this.setState({
-      code: clickedNote.toString(),
-      // NOTE: Not sure why this is spitting out an error. Doesn't seem to actually cause any issues. TODO.
-      item: 'clickedNote'
-    });
+    // console.log(clickedNote, clickedNoteKey);
     
+    // this.setState({
+    //   // item2: clickedNote['.key'],
+    //   // NOTE: Not sure why this is spitting out an error. Doesn't seem to actually cause any issues. TODO.
+    //   // item: clickedNote,
+    //   code: clickedNote[1]
+    // });
+    
+  // this.updatedCode(clickedNote);
+  },
+  placeClickedNote: function(clickedNote, clickedNoteKey) {
+    // If there's already an active note, remove the binding before creating a new one. 
+    if (activeNoteRef){
+      base.removeBinding(activeNoteRef);  
+    }
+    
+    console.log(clickedNoteKey);
+    activeNoteRef = base.syncState('notes/' + clickedNoteKey, {
+      context: this,
+      state: 'item',
+      asArray: true,
+    });
+    this.setState({
+      code: clickedNote[1],
+      activeNoteKey: clickedNoteKey
+    });
   },
   placeNewNote: function(){
     console.log('New Note, creating now');
@@ -376,7 +397,7 @@ var Pad = React.createClass({
       this.bindAsObject(newNoteRef, "emptyNote");
       this.bindAsObject(newNoteRef, "item");
       this.setState({code: this.code });
-      newNoteKey = newNoteRef.key();
+      var newNoteKey = newNoteRef.key();
       var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
       var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
       /* var newNoteUserRef = userNotesRef.push({"user": true, "test3": false, "test4": "testing"}); */
@@ -431,7 +452,7 @@ var Pad = React.createClass({
 
                   <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
                   <div className="notes">
-                    <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} noteKeys={this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} />
+                    <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} noteKeys={this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
                   </div>
                   {register}
                   {loginOrOut}

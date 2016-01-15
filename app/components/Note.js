@@ -16,20 +16,21 @@ var Note = React.createClass({
     // var ref = firebaseRef.child('notes/' + this.props.noteKey['.key']);
     // this.bindAsArray(ref, 'key'); 
     base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
-    base.syncState('notes/' + this.props.noteKey['.key'], {
+    base.bindToState('notes/' + this.props.noteKey['.key'], {
       context: this,
       state: 'note',
-      asArray: true,
+      asArray: true
     });
     console.log(this.props.noteKey['.key']);
   },
 	activateNote: function(item) { 
     /* This takes the clicked note, and displays it's full content in the main text window */
-    console.log('full note:' + item);
+    // console.log('full note:' + item);
     // this.props.updateNoteArea(item, this.state.usersNotesList);
     this.setState({
       isActive: true
     })
+    this.props.onClickedNote(this.state.note, this.props.noteKey['.key']);
   },
     // GOOD: set this.state.isHovering to true on mouse over
   handleMouseOver: function() {
@@ -67,7 +68,7 @@ var Note = React.createClass({
 		/* Take the full note and cut it down to 50 characters */
 		
 		return (
-			<li onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.props.onClick}>
+			<li onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.activateNote}>
         {this.state.note}        
       </li>
 		)
