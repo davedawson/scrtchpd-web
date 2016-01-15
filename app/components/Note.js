@@ -16,11 +16,22 @@ var Note = React.createClass({
     // var ref = firebaseRef.child('notes/' + this.props.noteKey['.key']);
     // this.bindAsArray(ref, 'key'); 
     base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
-    base.bindToState('notes/' + this.props.noteKey['.key'], {
+    // base.bindToState('notes/' + this.props.noteKey['.key'], {
+    //   context: this,
+    //   state: 'note',
+    //   asArray: true
+    // });
+    base.listenTo('notes/' + this.props.noteKey['.key'], {
       context: this,
-      state: 'note',
-      asArray: true
+      asArray: false,
+      then(noteData){
+        this.setState({
+          note: noteData.note,
+          updated_at: noteData.updated_at
+        })
+      }
     });
+
     console.log(this.props.noteKey['.key']);
   },
 	activateNote: function(item) { 
@@ -57,10 +68,10 @@ var Note = React.createClass({
     };
     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
     console.log('delete', item);
-    note = firebaseRef.child('/notes/' + item.key);
-    userNoteKey = firebaseRef.child('users/' + this.props.auth.uid + '/notes/' + item.key)
-    console.log(note.toString());
-    console.log(userNoteKey.toString());
+    var note = firebaseRef.child('/notes/' + this.props.noteKey['.key']);
+    var userNoteKey = firebaseRef.child('users/' + this.props.auth.uid + '/notes/' + this.props.noteKey['.key'])
+    // console.log(note.toString());
+    // console.log(userNoteKey.toString());
     note.remove(onComplete);
     userNoteKey.remove(onComplete);
   },
@@ -69,7 +80,7 @@ var Note = React.createClass({
 		
 		return (
 			<li onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.activateNote}>
-        {this.state.note}        
+        {this.state.note}
       </li>
 		)
 	}

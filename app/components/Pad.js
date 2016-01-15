@@ -326,8 +326,19 @@ var Pad = React.createClass({
       state: 'item',
       asArray: true,
     });
+
+    // activeNoteRef = base.listenTo('notes/' + clickedNoteKey, {
+    //   context: this,
+    //   asArray: false,
+    //   then(noteData){
+    //     this.setState({
+    //       code: noteData.note
+    //     })
+    //   }
+    // });
+
     this.setState({
-      code: clickedNote[1],
+      code: clickedNoteKey,
       activeNoteKey: clickedNoteKey
     });
   },
