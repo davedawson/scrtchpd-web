@@ -261,9 +261,9 @@ var Pad = React.createClass({
       /* If an item exists, update that item */
       // var firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
       /* Why does this only work if defined above? Shouldn't it pull in vars from other functions? */
-      var testRef = firebaseRef.child('/notes/' + this.state.activeNoteKey); 
+      var activeNoteRef = firebaseRef.child('/notes/' + this.state.activeNoteKey); 
       /* This code sets the text of Codemirror */
-      testRef.update({
+      activeNoteRef.update({
         "note": this.state.code,
         "updated_at": Firebase.ServerValue.TIMESTAMP
       });
@@ -321,24 +321,26 @@ var Pad = React.createClass({
     }
     
     console.log(clickedNoteKey);
-    activeNoteRef = base.syncState('notes/' + clickedNoteKey, {
-      context: this,
-      state: 'item',
-      asArray: true,
-    });
-
-    // activeNoteRef = base.listenTo('notes/' + clickedNoteKey, {
+    // activeNoteRef = base.syncState('notes/' + clickedNoteKey, {
     //   context: this,
-    //   asArray: false,
-    //   then(noteData){
-    //     this.setState({
-    //       code: noteData.note
-    //     })
-    //   }
+    //   state: 'item',
+    //   asArray: true,
     // });
 
+    activeNoteRef = base.fetch('notes/' + clickedNoteKey, {
+      context: this,
+      asArray: false,
+      then(noteData){
+        this.setState({
+          code: noteData.note
+        })
+        console.log('note', noteData.note);
+      }
+    });
+
+    console.log(activeNoteRef);
     this.setState({
-      code: clickedNoteKey,
+      // code: clickedNote.note,
       activeNoteKey: clickedNoteKey
     });
   },
