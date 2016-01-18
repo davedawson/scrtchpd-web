@@ -12,6 +12,9 @@ var NoteList = React.createClass({
     
     };
   },
+  componentDidMount: function() {
+    
+  },
   onClickedNote: function(item, noteKey){
     console.log(item);
     this.props.handleNoteAreaUpdate(item, noteKey);

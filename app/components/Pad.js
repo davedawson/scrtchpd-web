@@ -80,7 +80,10 @@ var Pad = React.createClass({
     // });
     var ref = firebaseRef.child('users/' + authData.uid + '/notes');
     var query = ref.orderByChild('date_updated');
+    console.log('results', query, ref);
+    // var reverseResults = query.reverse();
     this.bindAsArray(query, 'userNoteKeys'); 
+    
 
     // firebaseRef.child('notes').orderByChild('date_updated').on("child_added", function(noteSnapshot) {
     //   allNotesTest.push(noteSnapshot);

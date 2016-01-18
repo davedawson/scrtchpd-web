@@ -80,7 +80,9 @@ var Note = React.createClass({
 		
 		return (
 			<li onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.activateNote}>
-        {this.state.note}
+        
+      <p><strong><TimeAgo date={this.state.updated_at} /></strong>{this.state.note}</p>
+        { this.state.isHovering ? <a className="delete-link" onClick={this.handleDeleteNote}>delete</a> : null }
       </li>
 		)
 	}
