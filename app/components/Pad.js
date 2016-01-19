@@ -11,6 +11,8 @@ var Rebase = require('re-base');
 var Codemirror = require('react-codemirror');
 var firebaseRef;
 var activeNoteRef;
+var authData;
+var usersNotes = [];
 var base;
     // require('../../node_modules/codemirror/mode/markdown/markdown.js')
     // require('../../node_modules/codemirror/mode/gfm/gfm.js');
@@ -32,7 +34,7 @@ var Pad = React.createClass({
       sidebarOpen: true
     };
   },
-
+  
   componentWillMount: function() {
     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
     base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
@@ -40,7 +42,7 @@ var Pad = React.createClass({
     // All notes
     var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
     this.bindAsArray(allNotesRef, "notes");
-    var authData = firebaseRef.getAuth();
+    authData = firebaseRef.getAuth();
 
     var userNotesRef = firebaseRef.child("/users/" + authData.uid + "/notes").limitToLast(15);
     
@@ -62,10 +64,36 @@ var Pad = React.createClass({
     console.log('results', query, ref);
     // var reverseResults = query.reverse();
     this.bindAsArray(query, 'userNoteKeys');  
-    
+    this.indexSearchData();
   },
+
+  indexSearchData: function(){ 
+    // Run this when the app loads, hold on to all of this data for when there's a search
+
+    firebaseRef.child('users/' + authData.uid + '/notes').orderByChild('date_updated').on("child_added", function(noteKeySnapshot) {
+      // usersNotes.push(noteKeySnapshot.key());
+      // For each note key, go and fetch the Note record with the same key
+      // this.bindAsObject(ref, noteKeySnapshot.key()); 
+      console.log('snapshot', noteKeySnapshot.key());
+      firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
+        // Add that full note object to an array + the parent key
+        var data = noteSnapshot.val();
+        console.log('data', data);
+        usersNotes.push({
+            'note':       data.note,
+            'key': noteKeySnapshot.key()
+        });
+        console.log('usersNotes', usersNotes);
+      });
+    });
+    this.setState({
+      indexedSearchData: usersNotes
+    });
+  },
+
   doSearch:function(queryText){
-    console.log(queryText)
+    console.log('queryText', queryText)
+
     //get query result
     var queryResult=[]; 
     var options = {
@@ -73,16 +101,12 @@ var Pad = React.createClass({
       post: '</strong>',
       extract: function(el) { return el.note; }
     };
-    var list = ['baconing', 'narwhal', 'a mighty bear canoe'];
-    var list2 = this.state.usersNotesList;
-    var results = fuzzy.filter(queryText, list2, options)
-    // console.log(results);
-    /* var matches = results.map(function(el) { return el; });
-    console.log(matches);
-    */
+    // Filter the indexed list with the query test   
+    var results = fuzzy.filter(queryText, this.state.indexedSearchData, options)
+    console.log(results, queryResult);
     /* Traverse this tree: https://www.dropbox.com/s/4j4d8poh6e0r36a/Screenshot%202015-12-17%2015.34.14.png?dl=0 */
     results.forEach(function(item){
-      queryResult.push(item.original);
+      queryResult.push(item.original.key);
     });
     
     
@@ -104,7 +128,6 @@ var Pad = React.createClass({
   },
 
   updateCode: function(newCode) {
-
     console.log('typing');
     this.setState({
         code: newCode
@@ -236,7 +259,7 @@ var Pad = React.createClass({
 
                   <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
                   <div className="notes">
-                    <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} noteKeys={this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
+                    <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
                   </div>
                   {register}
                   {loginOrOut}
