@@ -26,8 +26,6 @@ var Pad = React.createClass({
       query:'',
       notes: [],
       listItems: [],
-      userNotesTest: [],
-      userNotesKeys: [],
       userNoteKeys: [],
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
@@ -38,12 +36,14 @@ var Pad = React.createClass({
   componentWillMount: function() {
     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
     base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
+
     // All notes
     var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
     this.bindAsArray(allNotesRef, "notes");
     var authData = firebaseRef.getAuth();
+
     var userNotesRef = firebaseRef.child("/users/" + authData.uid + "/notes").limitToLast(15);
-    /* var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + authData.uid + "/notes"); */
+    
     this.bindAsArray(userNotesRef, "userNotes");
     this.setState({
       authData: authData
@@ -55,160 +55,15 @@ var Pad = React.createClass({
     // User specific notes
     var usersNotesKeys = []
     var usersNotesList = []
-    var userNotesTest = []
-    var allNotesTest = []
-    this.setState({
-      usersNotesListTest: []
-    })
+
     // Grab the user's notes keys and loop through them
-
-    // base.syncState('notes/', {
-    //   context: this,
-    //   asArray: true,
-    //   then(notesData){
-    //     notesData.forEach((note) => {
-    //       console.log(note);
-    //     });
-
-    //     // this.setState({total});
-    //   }
-    // });]
-    // base.syncState('users/' + authData.uid + '/notes', {
-    //   context: this,
-    //   state: 'userNoteKeys',
-    //   asArray: true,
-    // });
     var ref = firebaseRef.child('users/' + authData.uid + '/notes');
     var query = ref.orderByChild('date_updated');
     console.log('results', query, ref);
     // var reverseResults = query.reverse();
-    this.bindAsArray(query, 'userNoteKeys'); 
+    this.bindAsArray(query, 'userNoteKeys');  
     
-
-    // firebaseRef.child('notes').orderByChild('date_updated').on("child_added", function(noteSnapshot) {
-    //   allNotesTest.push(noteSnapshot);
-    //   console.log(allNotesTest);
-    // });
-    // this.setState({
-    //   allNotesTest: allNotesTest
-    // });
-    // firebaseRef.child('users/' + authData.uid + '/notes').orderByChild('date_updated').on("child_added", function(noteKeySnapshot) {
-    //     // var ref = firebaseRef.child('notes/' + noteKeySnapshot.key());
-    //     // this.bindAsObject(ref, noteKeySnapshot.key()); 
-    //     var ref = firebaseRef.child('users/' + authData.uid + '/notes');
-    //     var query = ref.orderByChild('date_updated');
-    //     this.bindAsArray(query, "notes");
-
-    // }.bind(this)); 
-    firebaseRef.child('users/' + authData.uid + '/notes').orderByChild('date_updated').on("child_added", function(noteKeySnapshot) {
-      // console.log(noteKeySnapshot.key());
-      // Take each key and add it to an array  - TODO: I think this is unnecessary, but is helpful to have for testing. Remove. 
-      // var notesRefTest = this.state.userNotesTest;
-      // base.listenTo('notes/' + noteKeySnapshot.key(), {
-      //   context: this,
-      //   state: noteKeySnapshot.key(),
-      //   asArray: false,
-      //   then: function(notesData) {
-      //     // usersNotesList.push(keyObject);
-      //     console.log(notesData);
-      //     usersNotesList.push(notesData);
-      //   }
-      // });
-      // this.setState({
-      //   usersNotesList: usersNotesList
-      // });
-
-
-      // ref = firebaseRef.child('notes/' + noteKeySnapshot.key());
-      // For each note key, go and fetch the Note record with the same key
-      // var noteObject = this.bindAsObject(ref, noteKeySnapshot.key()); 
-      // addToItemList(noteObject);
-
-      // usersNotesList.push(keyObject);
-      // this.setState({
-      //   usersNotesList: usersNotesList
-      // });
-
-      // base.syncState('notes/' + noteKeySnapshot.key(), {
-      //   context: this,
-      //   state: noteKeySnapshot.key(),
-      //   asArray: false,
-      //   then(notesData){
-      //     userNotesTest.push(notesData);
-      //     // this.setState({total});
-      //   }
-      // });
-      // this.setState({
-      //   userNotesTest: userNotesTest
-      // });
-
-      // Original way of doing thing. Not working well: 
-      
-      usersNotesKeys.push(noteKeySnapshot.key());
-      // For each note key, go and fetch the Note record with the same key
-      // this.bindAsObject(ref, noteKeySnapshot.key()); 
-      firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
-        // Add that full note object to an array + the parent key
-        var data = noteSnapshot.val();
-        usersNotesList.push({
-            'created_at': data.created_at, 
-            'updated_at': data.updated_at,
-            'note':       data.note,
-            'key':        noteKeySnapshot.key()
-        });
-      });
-
-      this.setState({
-        listItems: usersNotesKeys,
-        usersNotesList: usersNotesList
-      });
-    
-      
-    }.bind(this));    
-    
-
-/*    firebaseRef.child('users/' + authData.uid + '/notes').on('child_changed', function(noteKeySnapshot, prevChildKey) {
-    // code to handle child data changes.
-      console.log('something changed!');
-      console.log(noteKeySnapshot.key().toString());
-      // Look through the current note list and find the matching key and update that key with the new content.
-      // if this.usersNotesList[i]  
-      console.log(noteSnapshot);
-      firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
-        // console.log(noteSnapshot.val());
-        // Add that full note object to an array
-        // IMPORTANT: This needs to UPDATE an entry in the array, does Push do that? Or is there 
-        // a different function for that?
-        // usersNotesList.push(noteSnapshot.val());
-        for (var i in noteSnapshot) {
-           if (projects[i].data.note == "Write somethi21ng") {
-              console.log('found it')
-              break; //Stop this loop, we found it!
-           }
-         }
-      });
-    });
-*/
-
-    this.setState({
-      listItems: usersNotesKeys,
-      usersNotesList: usersNotesList
-    });
-
-    // base.syncState('notes', {
-    //   context: this,
-    //   state: 'notesTEst',
-    //   asArray: true
-    // });
-
-
-
   },
-
-  componentDidMount: function() {
-    // console.log(this.state.listItems);
-  },
-
   doSearch:function(queryText){
     console.log(queryText)
     //get query result
@@ -255,67 +110,24 @@ var Pad = React.createClass({
         code: newCode
     });
     if (this.state.code != "Write something" && this.state.item == null) {
-      /* this.state.item.note != "Write something!" && this.state.item.key == null  */
       console.log('Not default note');
       /* Create a new note */
       this.createNewNote(this.state.code);
       console.log('Sending to createNewNote');
     } else if (this.state.item){
       /* If an item exists, update that item */
-      // var firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/notes");
-      /* Why does this only work if defined above? Shouldn't it pull in vars from other functions? */
       var activeNoteRef = firebaseRef.child('/notes/' + this.state.activeNoteKey); 
-      /* This code sets the text of Codemirror */
+      // Update FB with this new text
       activeNoteRef.update({
         "note": this.state.code,
         "updated_at": Firebase.ServerValue.TIMESTAMP
       });
-
-      // var noteKey = this.state.item['key']
-      // userNoteKey = firebaseRef.child('users/' + this.state.authData.uid + '/' + this.state.item['.key']);
-      // userNoteKey.update({
-      //   noteKey : false
-      // });
-      // console.log(userNoteKey.toString());
-      // console.log(testRef);
       console.log('Updating existing note');
-
-      // firebaseRef.child('notes/' + this.state.item['key']).on('value', function(noteSnapshot, prevChildKey) {
-      // // code to handle child data changes.
-      //   // Look through the current note list and find the matching key and update that key with the new content.
-
-      //   var data = noteSnapshot.val();
-      //   updatedItem = {
-      //       'created_at': data.created_at, 
-      //       'updated_at': data.updated_at,
-      //       'note':       data.note,
-      //       'key':        noteSnapshot.key()
-      //       };
-      //       // console.log(updatedItem);
-      //   this.setState({
-      //     item: updatedItem
-      //   });
-      // }.bind(this));
     }
     if (this.state.code != "Write something"){ 
-      /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */
-      
-      
+      /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */      
     }
     
-  },
-  handleNoteAreaUpdate: function(clickedNote, clickedNoteKey){
-    /* This takes the actived note, and sets the state of Codemirror that that note's full text. */
-    // console.log(clickedNote, clickedNoteKey);
-    
-    // this.setState({
-    //   // item2: clickedNote['.key'],
-    //   // NOTE: Not sure why this is spitting out an error. Doesn't seem to actually cause any issues. TODO.
-    //   // item: clickedNote,
-    //   code: clickedNote[1]
-    // });
-    
-  // this.updatedCode(clickedNote);
   },
   placeClickedNote: function(clickedNote, clickedNoteKey) {
     // If there's already an active note, remove the binding before creating a new one. 
@@ -323,27 +135,16 @@ var Pad = React.createClass({
       base.removeBinding(activeNoteRef);  
     }
     
-    console.log(clickedNoteKey);
-    // activeNoteRef = base.syncState('notes/' + clickedNoteKey, {
-    //   context: this,
-    //   state: 'item',
-    //   asArray: true,
-    // });
-
     activeNoteRef = base.fetch('notes/' + clickedNoteKey, {
       context: this,
       asArray: false,
       then(noteData){
         this.setState({
           code: noteData.note
-        })
-        console.log('note', noteData.note);
+        })    
       }
     });
-
-    console.log(activeNoteRef);
     this.setState({
-      // code: clickedNote.note,
       activeNoteKey: clickedNoteKey
     });
   },
@@ -361,39 +162,6 @@ var Pad = React.createClass({
       });
       this.unbind("item");
 
-  },
-  newNote: function(){
-    /*
-    if (this.state.item) {
-      console.log('already a note');
-    } else {
-    var newNoteRef = this.firebaseRefs.notes.push({
-      "note": "Write something!",
-      "created_at": Firebase.ServerValue.TIMESTAMP,
-      "updated_at": Firebase.ServerValue.TIMESTAMP
-    })
-    this.bindAsObject(newNoteRef, "item");
-    this.setState({
-      code: "Write something!",
-    });
-    }
-    */
-    if (this.state.item) {
-      console.log('already a note. Do nothing.');
-    } else {
-      console.log('New Note, creating now');
-      var newNoteRef = this.firebaseRefs.notes.push({
-        "note": "Write something!",
-        "created_at": Firebase.ServerValue.TIMESTAMP,
-        "updated_at": Firebase.ServerValue.TIMESTAMP
-      })
-      this.bindAsObject(newNoteRef, "item");
-      this.setState({
-        code: "Write something!",
-      });
-    }
-
-    /* this.unbind("emptyNote"); */
   },
   handleNewNote: function(item){
     if (this.state.item) {
@@ -468,7 +236,7 @@ var Pad = React.createClass({
 
                   <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
                   <div className="notes">
-                    <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} noteKeys={this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
+                    <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} noteKeys={this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
                   </div>
                   {register}
                   {loginOrOut}
