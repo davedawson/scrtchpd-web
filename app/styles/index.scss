@@ -1436,8 +1436,36 @@ html {
   font-size: 16px;
   border-radius: 0;
 }
+.sidebar-bottom-links {
+  background: #333;
+  width: 100%;
+  clear: both;
+  display: flex;
+  padding: 5px 5%;
+}
+.sidebar-bottom-link {
+  width: 50%;
+  color: #fff;
+  font-size: 14px;
+  font-weight: normal;
+  list-style-type: none;
+  a {
+    color: #fff;
+    font-weight: normal;
+    text-align: right;
+  }
 
-
+}
+.user-email {
+  width: 65%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: rgba(255,255,255,0.6);
+}
+.logout-link {
+  text-align: right;
+}
 .character-count {
   /*position: absolute;*/
   /*bottom: 0;/*

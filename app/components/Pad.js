@@ -233,8 +233,10 @@ var Pad = React.createClass({
       };
       var loginOrOut;
       var register;
+      var emailAddress;
       if(this.state.authData){
-        loginOrOut = <li><Link to="logout" className="navbar-brand">Logout</Link></li>;
+        emailAddress = <li className="user-email sidebar-bottom-link">{this.state.authData.password.email}</li>;
+        loginOrOut = <li className="logout-link sidebar-bottom-link"><Link to="logout" className="navbar-brand">Logout</Link></li>;
         register = null
       } else {
         loginOrOut = <li><Link to="login" className="navbar-brand">Login</Link></li>;
@@ -254,9 +256,11 @@ var Pad = React.createClass({
                   <div className="notes">
                     <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
                   </div>
-                  {register}
-                  {loginOrOut}
-                  <li><Link to="pad">Pad</Link></li>
+                  <div className="sidebar-bottom-links">
+                    {register}
+                    {emailAddress}
+                    {loginOrOut}
+                  </div>
                 </div>
               </div>
               <div className="main-content-container">
