@@ -7,7 +7,13 @@ var Logout = React.createClass({
   },
 
   render: function () {
-    return <p>You are now logged out</p>;
+    return (
+    	<div class="account-page">
+	    	<div class="form-wrap">
+		    	<p>You are now logged out</p>;
+	    	</div>
+    	</div>
+    	)
   }
 });
 

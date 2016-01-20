@@ -1403,18 +1403,30 @@ html {
   height: 100%;
   .sidebar {
     height: 100%;
-    width: 30%;
+    width: 0%;
     transition: all, 0.3s;
-    transform: translateX(-100%);
+    transition: width 0.3s ease-in-out;
+    transform: translateX(-50px);
     &.open {
       display: block;
+      width: 30%;
       transform: translateX(0);
     }
   }
   .writer {
-    width: 65%;
+    width: 80%;
     height: 100%;
     margin: 0 auto;
+  }
+}
+
+.sidebar-wrap { 
+  transition: all, 0.15s;
+  display: none;
+  transform: translateX(-100%);
+  .open & {
+    display: block;
+    transform: translateX(0);
   }
 }
 
@@ -1441,16 +1453,29 @@ html {
 .archive {
   
 }
+.main-content-container {
+  width: 100%;
+}
+
 .notes-list {
   float: left;
   background: rgba(0,0,0,0.03);
   border-right: 1px solid rgba(0,0,0,0.05);
   padding: 0 15px;
-  height: 100%;
+  height: auto;
   list-style-type: none;
   margin: 0;
   padding-bottom: 300px;
   width: 100%;
+  -ms-box-orient: vertical;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column-reverse; 
+  flex-direction: column-reverse;
 }
 .notes-list li {
   list-style-type: none;
@@ -1460,17 +1485,56 @@ html {
   padding: 20px 0;
   margin: 0;
   border-bottom: 1px solid rgba(0,0,0,0.05);
+  position: relative;
 }
 .notes-list strong {
   display: block;
 }
-
+.note {
+  
+}
+.notes-list .delete-link {
+  position: absolute;
+  top: 0px;
+  right: -30px;
+  background: rgba(0,0,0,0.2);
+  width: 15px;
+  height: 100%;
+  color: rgba(0,0,0,0.5);
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  transition: all 0.1s ease-in-out;
+  opacity: 0;
+  transform: translateX(-10px);
+  // width: 0;
+  // display: none;
+  img {
+    max-width: 12px;
+  }
+  &.exposed {
+    transform: translateX(0px);
+    // display: block;
+    // width: auto;
+    opacity: 1;
+  }
+  .vertical-text {
+    position: relative;
+    top: 50px;
+  }
+}
+.vertical-text {
+  display: block;
+  transform: rotate(-90deg);
+  transform-origin: left top 0;
+}
 .writer {
   
 }
 
 .buttons {
-  position: absolute;
+  position: relative;
   width: 100%;
   top: 0;
   z-index: 3;
@@ -1478,6 +1542,17 @@ html {
 .main-button {
   position: relative;
   z-index: 3;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border: 3px solid #ccc;
+  border-radius: 100px;
+  img {
+    max-width: 100%;
+  }
+  &:hover {
+    border-color: #777;
+  }
 }
 .menu-button {
   position: relative;

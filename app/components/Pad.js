@@ -244,20 +244,13 @@ var Pad = React.createClass({
         'sidebar': true,
         'open': this.state.sidebarOpen
       });
+      // <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
       return (
           <div>
-            <div className="buttons">
-              <div className="menu-button main-button" onClick={this.expandSidebar}>
-                Menu
-              </div>
-              <div className="new-note-button main-button" onClick={this.placeNewNote}>
-                New note
-              </div>
-            </div>
             <div className="pad-container">
               <div className={sidebarClass}>
-
-                  <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
+                <div className="sidebar-wrap">
+                  
                   <div className="notes">
                     <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
                   </div>
@@ -265,13 +258,24 @@ var Pad = React.createClass({
                   {loginOrOut}
                   <li><Link to="pad">Pad</Link></li>
                 </div>
-              
-              <section className="writer">
-                <Codemirror value={this.state.code} options={options} onChange={this.updateCode} placeholder="testing placeholder" />
-                <li className="character-count"><span onClick={this.onClick}></span></li>
-                <li className="clear"><a className="call-modal" onClick={this.clearText}><span>&times;</span></a></li>
-              </section>
               </div>
+              <div className="main-content-container">
+                <div className="buttons">
+                  <div className="menu-button main-button" onClick={this.expandSidebar}>
+                    <span><img src="app/img/hamburger.svg" alt="Menu" /></span>
+                  </div>
+                  <div className="new-note-button main-button" onClick={this.placeNewNote}>
+                    <img src="app/img/plus.svg" alt="Create a new note" />
+                  </div>
+                </div>
+                
+                <section className="writer">
+                  <Codemirror value={this.state.code} options={options} onChange={this.updateCode} placeholder="testing placeholder" />
+                  <li className="character-count"><span onClick={this.onClick}></span></li>
+                  <li className="clear"><a className="call-modal" onClick={this.clearText}><span>&times;</span></a></li>
+                </section>
+              </div>
+            </div>
           </div>
       );
   }

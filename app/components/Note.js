@@ -77,13 +77,16 @@ var Note = React.createClass({
   },
 	render: function() {
 		/* Take the full note and cut it down to 50 characters */
-		
+		var deleteClass = classNames({
+        'delete-link': true,
+        'exposed': this.state.isHovering
+      });
 		return (
-			<li onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.activateNote}>
+			<li className="note" onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.activateNote}>
         
       <p><strong><TimeAgo date={this.state.updated_at} /></strong>{this.state.note}</p>
-      <a className="delete-link" onClick={this.handleDeleteNote}>delete</a>
-        { this.state.isHovering ? 's' : null }
+      
+        <a className={deleteClass} onClick={this.handleDeleteNote}><span className="vertical-text">delete</span></a>
       </li>
 		)
 	}
