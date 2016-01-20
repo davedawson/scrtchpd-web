@@ -1,27 +1,14 @@
 var React = require('react');
 var firebaseUtils = require('../../utils/firebaseUtils');
-var Router = require('react-router');
+var ReactRouter = require('react-router');
+var Link = require('react-router').Link
+var Navigation = ReactRouter.Navigation;
+var History = ReactRouter.History;
 
 var Register = React.createClass({
-  mixins: [ Router.Navigation ],
-  handleSubmit: function(e){
-    e.preventDefault();
-    var email = this.refs.email.value;
-    var pw = this.refs.pw.value;
-    var firstName = this.refs.firstName.value;
-    var lastName = this.refs.lastName.value;
-    firebaseUtils.createUser({
-      email: email,
-      firstName: firstName, 
-      lastName: lastName, 
-      password: pw
-    }, function(error, userData) {
-      if (error) {
-        console.log("Error creating user:", error);
-      } else {
-        console.log("Successfully created user account with uid:", userData.uid);
-      }
-    }.bind(this));
+  mixins: [History],
+  contextTypes: {
+    router: React.PropTypes.func
   },
   render: function(){
     return (
@@ -46,6 +33,26 @@ var Register = React.createClass({
         </div>
       </div>
     )
+  },
+  handleSubmit: function(e){
+    e.preventDefault();
+    var email = this.refs.email.value;
+    var pw = this.refs.pw.value;
+    var firstName = this.refs.firstName.value;
+    var lastName = this.refs.lastName.value;
+    firebaseUtils.createUser({
+      email: email,
+      firstName: firstName, 
+      lastName: lastName, 
+      password: pw
+    }, function(error, userData) {
+      if (error) {
+        console.log("Error creating user:", error);
+      } else {
+        console.log("Successfully created user account with uid:", userData.uid);
+        this.history.pushState(null, '/pad');
+      }
+    }.bind(this));
   }
 });
 
