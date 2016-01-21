@@ -222,8 +222,11 @@ var Pad = React.createClass({
     });
     ReactDOM.getInputDOMNode(this.refs.searchInput).focus(); 
   },
+  testUpdate: function(){
+    console.log('test update');
+  },
   render: function() {
-    console.log(this.state.listItems);
+    
       var options = {
         mode: {
           name: "gfm",
@@ -258,7 +261,6 @@ var Pad = React.createClass({
                 <div className="sidebar-wrap">
                   
                   <div className="notes">
-                    <Writer />
                     <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
                   </div>
                   <div className="sidebar-bottom-links">
@@ -279,7 +281,7 @@ var Pad = React.createClass({
                 </div>
                 
                 <section className="writer">
-                  <Codemirror value={this.state.code} options={options} onChange={this.updateCode} placeholder="testing placeholder" />
+                  <Writer value={this.state.code} options={options} onChange={this.testUpdate} testUpdate={this.testUpdate} />
                   <li className="character-count"><span onClick={this.onClick}></span></li>
                   <li className="clear"><a className="call-modal" onClick={this.clearText}><span>&times;</span></a></li>
                 </section>
