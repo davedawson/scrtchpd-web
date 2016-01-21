@@ -75,16 +75,16 @@ var Pad = React.createClass({
       // usersNotes.push(noteKeySnapshot.key());
       // For each note key, go and fetch the Note record with the same key
       // this.bindAsObject(ref, noteKeySnapshot.key()); 
-      console.log('snapshot', noteKeySnapshot.key());
+      // console.log('snapshot', noteKeySnapshot.key());
       firebaseRef.child('notes/' + noteKeySnapshot.key()).once("value", function(noteSnapshot) {
         // Add that full note object to an array + the parent key
         var data = noteSnapshot.val();
-        console.log('data', data);
+        // console.log('data', data);
         usersNotes.push({
             'note':       data.note,
             'key': noteKeySnapshot.key()
         });
-        console.log('usersNotes', usersNotes);
+        // console.log('usersNotes', usersNotes);
       });
     });
     this.setState({
@@ -177,12 +177,16 @@ var Pad = React.createClass({
   },
   placeNewNote: function(){
     console.log('New Note, creating now');
-      
       var newNoteRef = this.firebaseRefs.notes.push({
         "note": "Write something!",
         "created_at": Firebase.ServerValue.TIMESTAMP,
         "updated_at": Firebase.ServerValue.TIMESTAMP
-      })
+      },
+        function() { console.log('callback completed'); }
+      );
+      // Need to return this new note key, and set this.state.activeNoteKey with it. 
+      // That is how UpdateNote gets it's location
+
       this.bindAsObject(newNoteRef, "item");
       this.setState({
         code: "Write something! NEW NOTE",
@@ -200,20 +204,50 @@ var Pad = React.createClass({
   },
   createNewNote: function(item){
     console.log('Creating a new note');
+      // Create a new note object, with the first character typed. 
+      var newNotePath;
+      function setNewNoteKey(newNotePath){
+        this.setState({
+          code: this.state.code,
+          activeNoteKey: newNotePath
+        });
+      }
       var newNoteRef = this.firebaseRefs.notes.push({
         "note": this.state.code,
         "created_at": Firebase.ServerValue.TIMESTAMP,
         "updated_at": Firebase.ServerValue.TIMESTAMP
-      });
-      this.bindAsObject(newNoteRef, "emptyNote");
+      }, 
+        function() { 
+          var newNoteString = newNoteRef.toString();
+          newNotePath = newNoteString.substr(newNoteString.lastIndexOf('/') + 1);
+          console.log(newNotePath);
+          console.log('callback completed');          
+          // setNewNoteKey(newNotePath)
+        }
+      );
+      // console.log(newNoteRef);
+      // this.bindAsObject(newNoteRef, "emptyNote");
       this.bindAsObject(newNoteRef, "item");
-      this.setState({code: this.code });
+      // base.listenTo('/notes/' + newNoteRef.toString().substr(newNoteRef.toString().lastIndexOf('/') + 1), {
+      //   context: this,
+      //   asArray: false,
+      //   then(noteData){
+      //     this.setState({
+      //       item: noteData
+      //     })
+      //   }
+      // });
+      console.log('newnote', newNoteRef.toString());
+      this.setState({
+        code: this.state.code,
+        activeNoteKey: newNoteRef.toString().substr(newNoteRef.toString().lastIndexOf('/') + 1)
+      });
       var newNoteKey = newNoteRef.key();
       var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
       var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
       /* var newNoteUserRef = userNotesRef.push({"user": true, "test3": false, "test4": "testing"}); */
-      this.unbind("emptyNote");
-      this.unbind("item");
+      // this.unbind("emptyNote");
+      // this.unbind("item");
 
   },
   expandSidebar: function(){
