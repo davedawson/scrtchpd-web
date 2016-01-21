@@ -2,6 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var SearchBar = require('./SearchBar.js');
 var NoteList = require('./NoteList.js');
+var Writer = require('./Writer.js');
 var Router = require('react-router');
 var Link = require('react-router').Link
 var classNames = require('classnames');
@@ -257,6 +258,7 @@ var Pad = React.createClass({
                 <div className="sidebar-wrap">
                   
                   <div className="notes">
+                    <Writer />
                     <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
                   </div>
                   <div className="sidebar-bottom-links">
