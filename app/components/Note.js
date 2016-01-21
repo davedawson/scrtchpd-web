@@ -66,26 +66,36 @@ var Note = React.createClass({
         console.log('Synchronization succeeded');
       }
     };
-    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
-    console.log('delete', item);
-    var note = firebaseRef.child('/notes/' + this.props.noteKey['.key']);
-    var userNoteKey = firebaseRef.child('users/' + this.props.auth.uid + '/notes/' + this.props.noteKey['.key'])
-    // console.log(note.toString());
-    // console.log(userNoteKey.toString());
-    note.remove(onComplete);
-    userNoteKey.remove(onComplete);
+    // Add a confirm dialog
+    if (confirm('Are you sure you want to permanently delete this note?')) { 
+      firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
+      console.log('delete', item);
+      var note = firebaseRef.child('/notes/' + this.props.noteKey['.key']);
+      var userNoteKey = firebaseRef.child('users/' + this.props.auth.uid + '/notes/' + this.props.noteKey['.key'])
+      // console.log(note.toString());
+      // console.log(userNoteKey.toString());
+      note.remove(onComplete);
+      userNoteKey.remove(onComplete);
+      this.props.removeFromList(this.props.noteKey['.key']);
+    }
+
+    
   },
 	render: function() {
 		/* Take the full note and cut it down to 50 characters */
 		var deleteClass = classNames({
-        'delete-link': true,
-        'exposed': this.state.isHovering
-      });
+      'delete-link': true,
+      'exposed': this.state.isHovering
+    });
+    var activeClass = classNames({
+      'note': true,
+      'active-note': this.props.activeNote,
+    });
 		return (
-			<li className="note" onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.activateNote}>
-        
-      <p><strong><TimeAgo date={this.state.updated_at} /></strong>{this.state.note}</p>
-      
+      <li className={activeClass} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
+  			<div onClick={this.activateNote}>
+          <p><strong><TimeAgo date={this.state.updated_at} /></strong>{this.state.note}</p>
+        </div>
         <a className={deleteClass} onClick={this.handleDeleteNote}><span className="vertical-text">delete</span></a>
       </li>
 		)

@@ -16,10 +16,10 @@ var NoteList = React.createClass({
     
   },
   onClickedNote: function(item, noteKey){
-    console.log(item);
+    // console.log(item);
     this.props.handleNoteAreaUpdate(item, noteKey);
     this.setState({
-      // testItem: item
+      activeNote: noteKey
     });
   },
   activateNote: function(item) { 
@@ -30,19 +30,27 @@ var NoteList = React.createClass({
     //   isActive: true
     // })
   },
+  removeFromList: function(noteKeyToDelete) {
+    console.log(noteKeyToDelete);
+
+  },  
   
   render: function() {    
     return (
       <ul className="notes-list" >      
-        {this.props.noteKeys.map(function(item, i) {          
+        {this.props.noteKeys.map(function(item, i) {   
+          if (this.state.activeNote == item['.key']) {
+             var activeNote = true;
+          }       
           var btnClass = classNames({
             'btn': true,
             'btn-pressed': this.state.isPressed,
-            'btn-over': !this.state.isPressed && this.state.isHovered
+            'btn-over': !this.state.isPressed && this.state.isHovered,
+            'active-note': activeNote
           });
           // console.log(item);
           return (
-            <Note noteKey={item} noteDigit={i}  className={btnClass} auth={this.props.auth} onClickedNote={this.onClickedNote}  />
+            <Note noteKey={item} noteDigit={i}  className={btnClass} auth={this.props.auth} activeNote={activeNote ? activeNote : null } onClickedNote={this.onClickedNote} removeFromList={this.removeFromList}  />
           );
         }, this)}
 

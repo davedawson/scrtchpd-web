@@ -163,7 +163,10 @@ var Pad = React.createClass({
       asArray: false,
       then(noteData){
         this.setState({
-          code: noteData.note
+          // THIS IS CAUSING THE DUPLICATION. I think.
+          // Because it's setting the state on an empty note, it's creating a new note with this content.
+          code: noteData.note,
+          item: clickedNote
         })    
       }
     });
@@ -236,10 +239,10 @@ var Pad = React.createClass({
       var emailAddress;
       if(this.state.authData){
         emailAddress = <li className="user-email sidebar-bottom-link">{this.state.authData.password.email}</li>;
-        loginOrOut = <li className="logout-link sidebar-bottom-link"><Link to="logout" className="navbar-brand">Logout</Link></li>;
+        loginOrOut = <li className="logout-link sidebar-bottom-link"><Link to="logout" className="navbar-brand">Log out</Link></li>;
         register = null
       } else {
-        loginOrOut = <li><Link to="login" className="navbar-brand">Login</Link></li>;
+        loginOrOut = <li><Link to="login" className="navbar-brand">Log in</Link></li>;
         register = <li><Link to="register" className="navbar-brand"> Register </Link></li>;
       }
       var sidebarClass = classNames({
