@@ -3,6 +3,7 @@ var ReactDOM = require('react-dom');
 var CM = require('codemirror');
 var className = require('classnames');
     require('../../node_modules/codemirror/mode/gfm/gfm.js');
+    require('../../node_modules/codemirror/addon/display/placeholder.js');
 var editor;
 var Writer = React.createClass({
   propTypes: {
@@ -85,7 +86,7 @@ var Writer = React.createClass({
         mode: {
           name: "gfm",
           highlightFormatting: true
-        }
+        },
       })
     );
   }

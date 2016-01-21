@@ -24,7 +24,7 @@ var Pad = React.createClass({
   getInitialState: function() {
 
     return {
-      code: "Write something",
+      // code: "Write something",
       counter: 0,
       query:'',
       notes: [],
@@ -228,15 +228,12 @@ var Pad = React.createClass({
   render: function() {
     
       var options = {
-        mode: {
-          name: "gfm",
-          highlightFormatting: true
-        },
         lineNumbers: false,
         lineWrapping: true,
         autofocus: true,
         extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
-        placeholder: "TESTING placeholder"
+        placeholder: "Write something..."
+
       };
       var loginOrOut;
       var register;
@@ -281,7 +278,7 @@ var Pad = React.createClass({
                 </div>
                 
                 <section className="writer">
-                  <Writer value={this.state.code} options={options} onChange={this.testUpdate} testUpdate={this.testUpdate} />
+                  <Writer value={this.state.code} options={options} onChange={this.updateCode} testUpdate={this.testUpdate} />
                   <li className="character-count"><span onClick={this.onClick}></span></li>
                   <li className="clear"><a className="call-modal" onClick={this.clearText}><span>&times;</span></a></li>
                 </section>
