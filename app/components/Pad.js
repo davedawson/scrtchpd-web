@@ -28,6 +28,7 @@ var Pad = React.createClass({
       counter: 0,
       query:'',
       notes: [],
+      // item: new Object(),
       listItems: [],
       userNoteKeys: [],
       usersNotesList: new Object(),
@@ -139,14 +140,24 @@ var Pad = React.createClass({
       this.createNewNote(this.state.code);
       console.log('Sending to createNewNote');
     } else if (this.state.item){
+
+      
       /* If an item exists, update that item */
-      var activeNoteRef = firebaseRef.child('/notes/' + this.state.activeNoteKey); 
-      // Update FB with this new text
-      activeNoteRef.update({
-        "note": this.state.code,
-        "updated_at": Firebase.ServerValue.TIMESTAMP
-      });
+      // var activeNoteRef = firebaseRef.child('/notes/' + this.state.activeNoteKey); 
+      // // Update FB with this new text
+      // // TODO: THIS is wrong. It should not create a new reference every time it updates. That's crazy.
+      // activeNoteRef.update({
+      //   "note": this.state.code,
+      //   "updated_at": Firebase.ServerValue.TIMESTAMP
+      // });
       console.log('Updating existing note');
+      var noteData = this.state.item;
+      noteData.note = newCode;
+      this.setState({
+        // item.note: 'test'
+        item: noteData
+      });
+      console.log(this.state.item.note);
     }
     if (this.state.code != "Write something"){ 
       /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */      
@@ -159,16 +170,28 @@ var Pad = React.createClass({
       base.removeBinding(activeNoteRef);  
     }
     
+    // activeNoteRef = base.fetch('notes/' + clickedNoteKey, {
+    //   context: this,
+    //   asArray: false,
+    //   then(noteData){
+    //     this.setState({
+    //       code: noteData.note,
+    //       item: noteData
+    //     })    
+    //   }
+    // });
+    activeNoteRef = base.syncState('notes/' + clickedNoteKey, {
+      context: this,
+      state: 'item',
+      asArray: false
+    });
     activeNoteRef = base.fetch('notes/' + clickedNoteKey, {
       context: this,
       asArray: false,
       then(noteData){
         this.setState({
-          // THIS IS CAUSING THE DUPLICATION. I think.
-          // Because it's setting the state on an empty note, it's creating a new note with this content.
-          code: noteData.note,
-          item: clickedNote
-        })    
+          code: noteData.note
+        })
       }
     });
     this.setState({
@@ -225,18 +248,16 @@ var Pad = React.createClass({
           // setNewNoteKey(newNotePath)
         }
       );
-      // console.log(newNoteRef);
-      // this.bindAsObject(newNoteRef, "emptyNote");
-      this.bindAsObject(newNoteRef, "item");
-      // base.listenTo('/notes/' + newNoteRef.toString().substr(newNoteRef.toString().lastIndexOf('/') + 1), {
-      //   context: this,
-      //   asArray: false,
-      //   then(noteData){
-      //     this.setState({
-      //       item: noteData
-      //     })
-      //   }
-      // });
+      
+      // This binds as an object, which allows to be updated from FB.
+      // This is only a one-way binding. Needs to be 2 way.
+
+      // this.bindAsObject(newNoteRef, "item");
+      base.syncState('/notes/' + newNoteRef.toString().substr(newNoteRef.toString().lastIndexOf('/') + 1), {
+        context: this,
+        state: 'item',
+        asArray: false
+      });
       console.log('newnote', newNoteRef.toString());
       this.setState({
         code: this.state.code,
@@ -292,7 +313,7 @@ var Pad = React.createClass({
                 <div className="sidebar-wrap">
                   
                   <div className="notes">
-                    <NoteList notes={this.state.filteredData ? this.state.filteredData : this.state.usersNotesList} noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} results={this.state.results} updateNoteArea={this.handleNoteAreaUpdate} onChange={this.onUpdate} userNotes={this.state.userNotes} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
+                    <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
                   </div>
                   <div className="sidebar-bottom-links">
                     {register}
