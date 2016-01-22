@@ -21,7 +21,7 @@ var Note = React.createClass({
     //   state: 'note',
     //   asArray: true
     // });
-    base.fetch('notes/' + this.props.noteKey['.key'], {
+    base.listenTo('notes/' + this.props.noteKey['.key'], {
       context: this,
       asArray: false,
       then(noteData){
