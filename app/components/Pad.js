@@ -287,7 +287,11 @@ var Pad = React.createClass({
         lineWrapping: true,
         autofocus: true,
         extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
-        placeholder: "Write something..."
+        placeholder: "Write something...",
+        mode: {
+          name: "gfm",
+          highlightFormatting: true
+        }
 
       };
       var loginOrOut;
