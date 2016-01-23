@@ -18,9 +18,11 @@ var NoteList = React.createClass({
   onClickedNote: function(item, noteKey){
     // console.log(item);
     this.props.handleNoteAreaUpdate(item, noteKey);
+
     this.setState({
       activeNote: noteKey
     });
+    // Reset all tabs
   },
   activateNote: function(item) { 
     /* This takes the clicked note, and displays it's full content in the main text window */
@@ -50,7 +52,7 @@ var NoteList = React.createClass({
           });
           // console.log(item);
           return (
-            <Note noteKey={item} noteDigit={i}  className={btnClass} auth={this.props.auth} activeNote={activeNote ? activeNote : null } onClickedNote={this.onClickedNote} removeFromList={this.removeFromList}  />
+            <Note noteKey={item} noteDigit={i} className={btnClass} auth={this.props.auth} activeNote={activeNote ? activeNote : null } onClickedNote={this.onClickedNote} removeFromList={this.removeFromList}  />
           );
         }, this)}
 

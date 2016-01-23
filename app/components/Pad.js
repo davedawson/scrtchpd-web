@@ -187,7 +187,7 @@ var Pad = React.createClass({
       state: 'item',
       asArray: false
     });
-    activeNoteRef = base.fetch('notes/' + clickedNoteKey, {
+    base.fetch('notes/' + clickedNoteKey, {
       context: this,
       asArray: false,
       then(noteData){
