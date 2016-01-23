@@ -34,7 +34,7 @@ var Pad = React.createClass({
       userNoteKeys: [],
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
-      sidebarOpen: true,
+      sidebarOpen: false,
       code: ""
     };
   },

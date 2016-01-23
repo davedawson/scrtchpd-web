@@ -1530,6 +1530,12 @@ html {
   position: relative;
   &.active-note {
     background: white;
+    .note-preview {
+      &:after {
+        background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff 90%);  
+      }
+      
+    }
   }
 }
 .notes-list strong {
@@ -1549,7 +1555,7 @@ html {
 .notes-list .delete-link {
   position: absolute;
   top: 0px;
-  right: -15px;
+  right: 0px;
   background: rgba(0,0,0,0.2);
   width: 15px;
   height: 100%;
@@ -1575,6 +1581,22 @@ html {
   .vertical-text {
     position: relative;
     top: 50px;
+  }
+}
+.note-preview {
+  position: relative;
+  display: block;
+  max-height: 6em; /* exactly three lines */
+  overflow: hidden;
+  &:after {
+    content: "";
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 70%;
+    height: 1em;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), #f8f8f8 90%);
   }
 }
 .vertical-text {
