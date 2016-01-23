@@ -8,6 +8,7 @@ var Link = require('react-router').Link
 var classNames = require('classnames');
 
 var fuzzy = require('fuzzy');
+var moment = require('moment');
 var Rebase = require('re-base');
 var Codemirror = require('react-codemirror');
 var firebaseRef;
@@ -33,7 +34,8 @@ var Pad = React.createClass({
       userNoteKeys: [],
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
-      sidebarOpen: true
+      sidebarOpen: true,
+      code: ""
     };
   },
   
@@ -309,6 +311,14 @@ var Pad = React.createClass({
         'sidebar': true,
         'open': this.state.sidebarOpen
       });
+      var created_at;
+      var updated_at;
+      if (this.state.item) {
+        var created = moment(this.state.item.created_at).format('MMMM Do YYYY');
+        created_at = <p>Created on: {created}</p>
+        updated_at = <p>Last updated at: {this.state.item.updated_at}</p>
+      }
+
       // <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
       return (
           <div>
@@ -319,11 +329,11 @@ var Pad = React.createClass({
                   <div className="notes">
                     <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
                   </div>
-                  <div className="sidebar-bottom-links">
-                    {register}
-                    {emailAddress}
-                    {loginOrOut}
-                  </div>
+                </div>
+                <div className="sidebar-bottom-links">
+                  {register}
+                  {emailAddress}
+                  {loginOrOut}
                 </div>
               </div>
               <div className="main-content-container">
@@ -337,9 +347,12 @@ var Pad = React.createClass({
                 </div>
                 
                 <section className="writer">
+                  <div className="note-dates">
+                    {created_at}
+                    
+                  </div>
                   <Writer value={this.state.code} options={options} onChange={this.updateCode} testUpdate={this.testUpdate} />
-                  <li className="character-count"><span onClick={this.onClick}></span></li>
-                  <li className="clear"><a className="call-modal" onClick={this.clearText}><span>&times;</span></a></li>
+                  <p className="character-count">{this.state.code.length} characters</p>
                 </section>
               </div>
             </div>

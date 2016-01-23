@@ -2,6 +2,7 @@ var React = require('react');
 var TimeAgo = require('react-timeago');
 var classNames = require('classnames');
 var Rebase = require('re-base');
+var moment = require('moment');
 var firebaseRef;
 var base;
 var Note = React.createClass({
@@ -91,6 +92,8 @@ var Note = React.createClass({
       'note': true,
       'active-note': this.props.activeNote,
     });
+    var date = moment(this.state.updated_at).endOf('day').fromNow();
+
 		return (
       <li className={activeClass} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
   			<div onClick={this.activateNote}>

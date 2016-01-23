@@ -75,19 +75,10 @@ var Writer = React.createClass({
   render: function render() {
     var editorClassName = className('ReactCodeMirror', this.state.isFocused ? 'ReactCodeMirror--focused' : null, this.props.className);
 
-    return React.createElement(
-      'div',
-      { className: editorClassName },
-      React.createElement('textarea', { 
-        ref: 'textarea', 
-        name: this.props.path, 
-        defaultValue: '', 
-        autoComplete: 'off',
-        mode: {
-          name: "gfm",
-          highlightFormatting: true
-        },
-      })
+    return (
+      <div>
+        <textarea ref="textarea" name={this.props.path} autoComplete="off" />
+      </div>
     );
   }
 
