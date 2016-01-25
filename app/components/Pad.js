@@ -201,22 +201,50 @@ var Pad = React.createClass({
     });
   },
   placeNewNote: function(){
+    var newNotePath;
     console.log('New Note, creating now');
       var newNoteRef = this.firebaseRefs.notes.push({
-        "note": "Write something!",
+        "note": this.state.code,
         "created_at": Firebase.ServerValue.TIMESTAMP,
         "updated_at": Firebase.ServerValue.TIMESTAMP
-      },
-        function() { console.log('callback completed'); }
+      }, 
+        function() { 
+          var newNoteString = newNoteRef.toString();
+          newNotePath = newNoteString.substr(newNoteString.lastIndexOf('/') + 1);
+          console.log(newNotePath);
+          console.log('callback completed');          
+          // setNewNoteKey(newNotePath)
+        }
       );
+      var newNoteKey = newNoteRef.toString().substr(newNoteRef.toString().lastIndexOf('/') + 1)
+      // Set this new note as the active note, set it as true, and replace the code content with the note text.
+      // console.log(newNoteCreatedRef);
+      // this.bindAsObject(newNoteCreatedRef, "item");
+      base.syncState('/notes/' + newNoteKey, {
+        context: this,
+        state: 'item',
+        asArray: false
+      });
+
+      this.setState({
+        code: "",
+        activeNoteKey: newNoteKey
+      });
+
+      ;
+      var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
+      var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
+
+
+
       // Need to return this new note key, and set this.state.activeNoteKey with it. 
       // That is how UpdateNote gets it's location
 
-      this.bindAsObject(newNoteRef, "item");
-      this.setState({
-        code: "Write something! NEW NOTE",
-      });
-      this.unbind("item");
+      // this.bindAsObject(newNoteRef, "item");
+      // this.setState({
+      //   // code: "Write something! NEW NOTE",
+      // });
+      // this.unbind("item");
 
   },
   handleNewNote: function(item){
@@ -327,7 +355,7 @@ var Pad = React.createClass({
                 <div className="sidebar-wrap">
                   
                   <div className="notes">
-                    <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} />
+                    <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} />
                   </div>
                 </div>
                 <div className="sidebar-bottom-links">

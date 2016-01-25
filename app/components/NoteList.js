@@ -9,11 +9,23 @@ var NoteList = React.createClass({
   
   getInitialState: function(){
     return {
-    
+      activeNote: this.props.activeNoteKey
     };
   },
   componentDidMount: function() {
     
+  },
+  componentDidUpdate: function() {
+    // if (this.props.activeNoteKey) {
+    //   this.setActiveNoteKey(this.props.activeNoteKey);
+    //   // console.log(this.props.activeNoteKey);
+    // }
+  },
+  setActiveNoteKey: function(){
+    // console.log(this.props.activeNoteKey);
+    // this.setState({
+    //   activeNote: this.props.activeNoteKey
+    // });
   },
   onClickedNote: function(item, noteKey){
     // console.log(item);
@@ -41,9 +53,10 @@ var NoteList = React.createClass({
     return (
       <ul className="notes-list" >      
         {this.props.noteKeys.map(function(item, i) {   
-          if (this.state.activeNote == item['.key']) {
+          if (this.props.activeNoteKey == item['.key']) {
              var activeNote = true;
           }       
+          console.log('activeNote', activeNote);
           var btnClass = classNames({
             'btn': true,
             'btn-pressed': this.state.isPressed,
