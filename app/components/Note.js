@@ -33,7 +33,7 @@ var Note = React.createClass({
       }
     });
 
-    console.log(this.props.noteKey['.key']);
+    // console.log(this.props.noteKey['.key']);
   },
 	activateNote: function(item) { 
     /* This takes the clicked note, and displays it's full content in the main text window */

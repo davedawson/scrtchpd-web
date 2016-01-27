@@ -56,7 +56,7 @@ var NoteList = React.createClass({
           if (this.props.activeNoteKey == item['.key']) {
              var activeNote = true;
           }       
-          console.log('activeNote', activeNote);
+          // console.log('activeNote', activeNote);
           var btnClass = classNames({
             'btn': true,
             'btn-pressed': this.state.isPressed,
