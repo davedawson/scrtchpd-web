@@ -206,7 +206,8 @@ var Pad = React.createClass({
       var newNoteRef = this.firebaseRefs.notes.push({
         "note": this.state.code,
         "created_at": Firebase.ServerValue.TIMESTAMP,
-        "updated_at": Firebase.ServerValue.TIMESTAMP
+        "updated_at": Firebase.ServerValue.TIMESTAMP,
+        "user_id": this.state.authData.uid
       }, 
         function() { 
           var newNoteString = newNoteRef.toString();
@@ -268,7 +269,8 @@ var Pad = React.createClass({
       var newNoteRef = this.firebaseRefs.notes.push({
         "note": this.state.code,
         "created_at": Firebase.ServerValue.TIMESTAMP,
-        "updated_at": Firebase.ServerValue.TIMESTAMP
+        "updated_at": Firebase.ServerValue.TIMESTAMP,
+        "user_id": this.state.authData.uid
       }, 
         function() { 
           var newNoteString = newNoteRef.toString();
