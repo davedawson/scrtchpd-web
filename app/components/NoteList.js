@@ -1,4 +1,6 @@
 var React = require('react');
+var CSSTransitionGroup = require('react-addons-css-transition-group');
+
 var TimeAgo = require('react-timeago');
 var Rebase = require('re-base');
 var classNames = require('classnames');
@@ -51,7 +53,13 @@ var NoteList = React.createClass({
   
   render: function() {    
     return (
-      <ul className="notes-list" >      
+      <CSSTransitionGroup 
+        className="notes-list" 
+        component="ul" 
+        transitionName="order" 
+        transitionEnterTimeout={300} 
+        transitionLeaveTimeout={300}
+      >      
         {this.props.noteKeys.map(function(item, i) {   
           if (this.props.activeNoteKey == item['.key']) {
              var activeNote = true;
@@ -69,7 +77,7 @@ var NoteList = React.createClass({
           );
         }, this)}
 
-      </ul>
+      </CSSTransitionGroup>
     );
   }
 });

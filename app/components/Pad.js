@@ -1,5 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var CSSTransitionGroup = require('react-addons-css-transition-group');
+
 var SearchBar = require('./SearchBar.js');
 var NoteList = require('./NoteList.js');
 var Writer = require('./Writer.js');
