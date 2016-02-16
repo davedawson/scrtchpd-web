@@ -1,6 +1,6 @@
 var React = require('react');
 var firebaseUtils = require('../utils/firebaseUtils');
-var Pad = require('./Pad.js');
+var Wrapper = require('./Wrapper.js');
 var SearchBar = require('./SearchBar.js');
 var NoteList = require('./NoteList.js');
 var Router = require('react-router');

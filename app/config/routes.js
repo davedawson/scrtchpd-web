@@ -1,7 +1,7 @@
 var React = require('react');
 var App = require('../components/App');
 var Home = require('../components/Home');
-var Pad = require('../components/Pad');
+var Wrapper = require('../components/Wrapper');
 var NotFound = require('../components/NotFound');
 var Login = require("../components/login-register/Login");
 var Logout = require('../components/login-register/Logout');
@@ -24,8 +24,7 @@ module.exports = (
 */
 
 	<Router history={createBrowserHistory()}>
-    		<Route name="home" path="/" component={Pad} />
-    <Route name="pad" path="pad" component={Pad} />
+		<Route name="home" path="/" component={Wrapper} />
     <Route name="login" path="login" component={Login} />    
     <Route name="logout" path="logout" component={Logout} />    
     <Route name="register" path="register" component={Register} />
