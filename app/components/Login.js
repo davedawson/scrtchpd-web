@@ -1,11 +1,13 @@
 var React = require('react');
 var ReactRouter = require('react-router');
 var Link = require('react-router').Link
-var firebaseUtils = require('../../utils/firebaseUtils');
+var forge = "https://scrtchpd.firebaseio.com";
+var ref = new Firebase(forge);
+var firebaseUtils = require('../utils/firebaseUtils');
 var Navigation = ReactRouter.Navigation;
 var History = ReactRouter.History;
 
-
+var cachedUser = null;
 var Login = React.createClass({
   mixins: [History],
   statics: {
@@ -19,7 +21,6 @@ var Login = React.createClass({
       error: false
     }
   },
-  
   render: function(){
     var errors = this.state.error ? <p> Error on Login </p> : '';
     return (
@@ -55,6 +56,10 @@ var Login = React.createClass({
         // Router.replaceWith('pad');
         // this.context.router.transitionTo('pad');
         // this.history.pushState(null, '/pad');
+        this.setState({
+        	loggedIn: "loggedIn"
+        });
+        this.props.logInUser();
       }
     }.bind(this));
   },

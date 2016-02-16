@@ -44,7 +44,7 @@ var firebaseUtils = {
         authData.email = userObj.email;
         cachedUser = authData;
         cb(authData);
-        this.onChange(true);
+        // this.onChange(true);
         cbOnRegister && cbOnRegister(true);
       }
     }.bind(this));

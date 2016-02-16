@@ -360,39 +360,14 @@ var RegisteredPad = React.createClass({
       // if(this.state.uid) {
         return (
           <div>
-            <div className="pad-container">
-              <div className={sidebarClass}>
-                <div className="sidebar-wrap">
-                  
-                  <div className="notes">
-                    <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} />
-                  </div>
+            <div className="main-content-container">
+              <section className="writer">
+                <div className="note-dates">
+                  {created_at}
                 </div>
-                <div className="sidebar-bottom-links">
-                  {register}
-                  {emailAddress}
-                  {loginOrOut}
-                </div>
-              </div>
-              <div className="main-content-container">
-                <div className="buttons">
-                  <div className="menu-button main-button" onClick={this.expandSidebar}>
-                    <span><img src="app/img/hamburger.svg" alt="Menu" /></span>
-                  </div>
-                  <div className="new-note-button main-button" onClick={this.placeNewNote}>
-                    <img src="app/img/plus.svg" alt="Create a new note" />
-                  </div>
-                </div>
-                
-                <section className="writer">
-                  <div className="note-dates">
-                    {created_at}
-                    
-                  </div>
-                  <Writer value={this.state.code} options={options} onChange={this.updateCode} testUpdate={this.testUpdate} />
-                  <p className="character-count">{this.state.code.length} characters</p>
-                </section>
-              </div>
+                <Writer value={this.state.code} options={options} onChange={this.updateCode} testUpdate={this.testUpdate} />
+                <p className="character-count">{this.state.code.length} characters</p>
+              </section>
             </div>
           </div>
         );

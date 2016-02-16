@@ -10,6 +10,7 @@ var Link = require('react-router').Link
 var classNames = require('classnames');
 var UnauthenticatedSidebar = require('./UnauthenticatedSidebar.js');
 var RegisteredPad = require('./RegisteredPad.js');
+var LoginForm = require('./Login.js');
 
 var fuzzy = require('fuzzy');
 var moment = require('moment');
@@ -20,6 +21,10 @@ var activeNoteRef;
 var authData;
 var usersNotes = [];
 var base;
+var usersNotesListTest = new Object();
+// User specific notes
+var usersNotesKeys = []
+var usersNotesList = []
     // require('../../node_modules/codemirror/mode/markdown/markdown.js')
     // require('../../node_modules/codemirror/mode/gfm/gfm.js');
     // require('../../node_modules/codemirror/addon/display/placeholder.js');
@@ -44,37 +49,50 @@ var Pad = React.createClass({
   componentWillMount: function() {
     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
     base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
-
     // All notes
     var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
     this.bindAsArray(allNotesRef, "notes");
     authData = firebaseRef.getAuth();
-
-    
+    console.log('data', authData);
     if (authData) {
       this.setState({
         authData: authData
       });  
 
-      var usersNotesListTest = new Object();
-      // User specific notes
-      var usersNotesKeys = []
-      var usersNotesList = []
-      var userNotesRef = firebaseRef.child("/users/" + authData.uid + "/notes").limitToLast(15);
-      this.bindAsArray(userNotesRef, "userNotes");
       // Grab the user's notes keys and loop through them
-      var ref = firebaseRef.child('users/' + authData.uid + '/notes');
-      var query = ref.orderByChild('date_updated');
-      console.log('results', query, ref);
-      // var reverseResults = query.reverse();
-    }    
+      // var ref = firebaseRef.child('users/' + authData.uid + '/notes');
+      // var query = ref.orderByChild('date_updated');
+      // this.bindAsArray(query, 'userNoteKeys');  
+      this.findUserNotesAndLoop(authData.uid);
+    } else {
+      this.setState({
+        sidebarOpen: true
+      });
+    }
   },
 
+  findUserNotesAndLoop: function(uid) {
+    // Grab the user's notes keys and loop through them
+    var ref = firebaseRef.child('users/' + uid + '/notes');
+    var query = ref.orderByChild('date_updated');
+    this.bindAsArray(query, 'userNoteKeys');  
+  },
   expandSidebar: function(){
     this.setState({
       sidebarOpen: !this.state.sidebarOpen
     });
-    ReactDOM.getInputDOMNode(this.refs.searchInput).focus(); 
+    // ReactDOM.getInputDOMNode(this.refs.searchInput).focus(); 
+  },
+
+  logInUser: function(){
+    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
+    authData = firebaseRef.getAuth();
+    if (authData) {
+      this.setState({
+        authData: authData
+      });  
+      this.findUserNotesAndLoop(authData.uid);
+    }
   },
 
   render: function() {
@@ -115,13 +133,17 @@ var Pad = React.createClass({
       }
       var LoggedIn = authData;
       var pad;
+      var sidebar;
       // <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
       if (LoggedIn) {
         console.log('logged in'); 
-
         // One pad component. If logged in, send option for user info, else send option for local storage.
         pad = <RegisteredPad />;
+        sidebar = <div className="notes">
+                    <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} />
+                  </div>;
       } else {
+        sidebar = <LoginForm logInUser={this.logInUser} />;
         console.log('not logged in');
         pad = "Local Storage pad option";
       }
@@ -131,10 +153,8 @@ var Pad = React.createClass({
             <div className="pad-container">
               <div className={sidebarClass}>
                 <div className="sidebar-wrap">
+                  {sidebar}
                   
-                  <div className="notes">
-                    <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} />
-                  </div>
                 </div>
                 <div className="sidebar-bottom-links">
                   {register}
