@@ -158,6 +158,41 @@ var Wrapper = React.createClass({
     }
   },
 
+  placeNewNote: function(){
+    var newNotePath;
+    console.log('New Note, creating now');
+      var newNoteRef = this.firebaseRefs.notes.push({
+        "note": this.state.code,
+        "created_at": Firebase.ServerValue.TIMESTAMP,
+        "updated_at": Firebase.ServerValue.TIMESTAMP,
+        "user_id": this.state.authData.uid
+      }, 
+        function() { 
+          var newNoteString = newNoteRef.toString();
+          newNotePath = newNoteString.substr(newNoteString.lastIndexOf('/') + 1);
+          console.log(newNotePath);
+          console.log('callback completed');          
+          // setNewNoteKey(newNotePath)
+        }
+      );
+      var newNoteKey = newNoteRef.toString().substr(newNoteRef.toString().lastIndexOf('/') + 1)
+      // Set this new note as the active note, set it as true, and replace the code content with the note text.
+      // console.log(newNoteCreatedRef);
+      // this.bindAsObject(newNoteCreatedRef, "item");
+      base.syncState('/notes/' + newNoteKey, {
+        context: this,
+        state: 'item',
+        asArray: false
+      });
+
+      this.setState({
+        code: "",
+        activeNoteKey: newNoteKey
+      });
+      var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
+      var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
+  },
+
   render: function() {
     
       var options = {
