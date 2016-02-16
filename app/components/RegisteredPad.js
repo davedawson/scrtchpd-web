@@ -44,22 +44,16 @@ var RegisteredPad = React.createClass({
   },
   
   componentWillMount: function() {
-    if (this.props.localStorage){
-      this.setState({
-        placeholder: "Write something, even though you're not logged in."
-      })
-    } else {
+    console.log(this.props.localStorage);
+    if (this.props.localStorage == false){
+      console.log('logged in');
       firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
       base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
 
       // All notes
-      var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
-      this.bindAsArray(allNotesRef, "notes");
       authData = firebaseRef.getAuth();
-
       var userNotesRef = firebaseRef.child("/users/" + authData.uid + "/notes").limitToLast(15);
-      
-      this.bindAsArray(userNotesRef, "userNotes");
+      // this.bindAsArray(userNotesRef, "userNotes");
       this.setState({
         authData: authData
       });
@@ -76,8 +70,14 @@ var RegisteredPad = React.createClass({
       var query = ref.orderByChild('date_updated');
       console.log('results', query, ref);
       // var reverseResults = query.reverse();
-      this.bindAsArray(query, 'userNoteKeys');  
+      // this.bindAsArray(query, 'userNoteKeys');  
       this.indexSearchData();  
+
+    } else {
+      console.log('logged out');
+      this.setState({
+        placeholder: "Write something, even though you're not logged in."
+      })      
     }
     
   },

@@ -138,13 +138,13 @@ var Pad = React.createClass({
       if (LoggedIn) {
         console.log('logged in'); 
         // One pad component. If logged in, send option for user info, else send option for local storage.
-        pad = <RegisteredPad />;
+        pad = <RegisteredPad localStorage={false}  />;
         sidebar = <div className="notes">
                     <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} />
                   </div>;
       } else {
+        
         sidebar = <LoginForm logInUser={this.logInUser} />;
-        console.log('not logged in');
         pad = <RegisteredPad localStorage={true} />;
       }
       // if(this.state.uid) {
