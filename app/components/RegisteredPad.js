@@ -14,6 +14,8 @@ var fuzzy = require('fuzzy');
 var moment = require('moment');
 var Rebase = require('re-base');
 var Codemirror = require('react-codemirror');
+var LocalStorageMixin = require('react-localstorage');
+
 var firebaseRef;
 var activeNoteRef;
 var authData;
@@ -24,7 +26,7 @@ var base;
     // require('../../node_modules/codemirror/addon/display/placeholder.js');
 
 var RegisteredPad = React.createClass({
-  mixins: [ReactFireMixin],
+  mixins: [LocalStorageMixin],
   getInitialState: function() {
     return {
       // code: "Write something",
@@ -35,44 +37,49 @@ var RegisteredPad = React.createClass({
       listItems: [],
       userNoteKeys: [],
       usersNotesList: new Object(),
-      codePlaceholder: "Write something!",
       sidebarOpen: false,
-      code: ""
-
+      code: "",
+      placeholder: "Write something..."
     };
   },
   
   componentWillMount: function() {
+    if (this.props.localStorage){
+      this.setState({
+        placeholder: "Write something, even though you're not logged in."
+      })
+    } else {
+      firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
+      base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
 
-    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
-    base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
+      // All notes
+      var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
+      this.bindAsArray(allNotesRef, "notes");
+      authData = firebaseRef.getAuth();
 
-    // All notes
-    var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
-    this.bindAsArray(allNotesRef, "notes");
-    authData = firebaseRef.getAuth();
+      var userNotesRef = firebaseRef.child("/users/" + authData.uid + "/notes").limitToLast(15);
+      
+      this.bindAsArray(userNotesRef, "userNotes");
+      this.setState({
+        authData: authData
+      });
+      var addToItemList = function(note) {
+        console.log('note:', note);
+      };
+      var usersNotesListTest = new Object();
+      // User specific notes
+      var usersNotesKeys = []
+      var usersNotesList = []
 
-    var userNotesRef = firebaseRef.child("/users/" + authData.uid + "/notes").limitToLast(15);
+      // Grab the user's notes keys and loop through them
+      var ref = firebaseRef.child('users/' + authData.uid + '/notes');
+      var query = ref.orderByChild('date_updated');
+      console.log('results', query, ref);
+      // var reverseResults = query.reverse();
+      this.bindAsArray(query, 'userNoteKeys');  
+      this.indexSearchData();  
+    }
     
-    this.bindAsArray(userNotesRef, "userNotes");
-    this.setState({
-      authData: authData
-    });
-    var addToItemList = function(note) {
-      console.log('note:', note);
-    };
-    var usersNotesListTest = new Object();
-    // User specific notes
-    var usersNotesKeys = []
-    var usersNotesList = []
-
-    // Grab the user's notes keys and loop through them
-    var ref = firebaseRef.child('users/' + authData.uid + '/notes');
-    var query = ref.orderByChild('date_updated');
-    console.log('results', query, ref);
-    // var reverseResults = query.reverse();
-    this.bindAsArray(query, 'userNoteKeys');  
-    this.indexSearchData();
   },
 
   indexSearchData: function(){ 
@@ -317,13 +324,13 @@ var RegisteredPad = React.createClass({
     console.log('test update');
   },
   render: function() {
-    
+      
       var options = {
         lineNumbers: false,
         lineWrapping: true,
         autofocus: true,
         extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
-        placeholder: "Write something...",
+        placeholder: this.state.placeholder,
         mode: {
           name: "gfm",
           highlightFormatting: true
@@ -365,7 +372,7 @@ var RegisteredPad = React.createClass({
                 <div className="note-dates">
                   {created_at}
                 </div>
-                <Writer value={this.state.code} options={options} onChange={this.updateCode} testUpdate={this.testUpdate} />
+                <Writer value={this.state.code} options={options} onChange={this.updateCode} testUpdate={this.testUpdate} placeholder={this.state.placeholder} />
                 <p className="character-count">{this.state.code.length} characters</p>
               </section>
             </div>

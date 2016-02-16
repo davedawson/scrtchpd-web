@@ -145,7 +145,7 @@ var Pad = React.createClass({
       } else {
         sidebar = <LoginForm logInUser={this.logInUser} />;
         console.log('not logged in');
-        pad = "Local Storage pad option";
+        pad = <RegisteredPad localStorage={true} />;
       }
       // if(this.state.uid) {
         return (
