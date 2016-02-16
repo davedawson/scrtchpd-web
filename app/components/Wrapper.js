@@ -8,10 +8,9 @@ var Writer = require('./Writer.js');
 var Router = require('react-router');
 var Link = require('react-router').Link
 var classNames = require('classnames');
-var UnauthenticatedSidebar = require('./UnauthenticatedSidebar.js');
 var Pad = require('./Pad.js');
 var LoginForm = require('./Login.js');
-
+var firebaseUtils = require('../utils/firebaseUtils');
 var fuzzy = require('fuzzy');
 var moment = require('moment');
 var Rebase = require('re-base');
@@ -94,6 +93,70 @@ var Wrapper = React.createClass({
       this.findUserNotesAndLoop(authData.uid);
     }
   },
+  logOutUser: function(){
+    console.log('log out');
+    firebaseUtils.logout()
+    this.setState({
+      authData: null
+    });
+  },
+  placeClickedNote: function(clickedNote, clickedNoteKey) {
+    // If there's already an active note, remove the binding before creating a new one. 
+    if (activeNoteRef){
+      base.removeBinding(activeNoteRef);  
+    }
+    
+    // activeNoteRef = base.fetch('notes/' + clickedNoteKey, {
+    //   context: this,
+    //   asArray: false,
+    //   then(noteData){
+    //     this.setState({
+    //       code: noteData.note,
+    //       item: noteData
+    //     })    
+    //   }
+    // });
+    activeNoteRef = base.syncState('notes/' + clickedNoteKey, {
+      context: this,
+      state: 'item',
+      asArray: false
+    });
+    base.fetch('notes/' + clickedNoteKey, {
+      context: this,
+      asArray: false,
+      then(noteData){
+        this.setState({
+          code: noteData.note
+        })
+      }
+    });
+    this.setState({
+      activeNoteKey: clickedNoteKey
+    });
+  },
+
+  updateCode: function(newCode) {
+    this.setState({
+        code: newCode
+    });
+    if (this.state.code != "Write something" && this.state.item == null) {
+      console.log('Not default note');
+      /* Create a new note */
+      this.createNewNote(this.state.code);
+      console.log('Sending to createNewNote');
+    } else if (this.state.item){
+      /* If an item exists, update that item */
+      console.log('Updating existing note');
+      var noteData = this.state.item;
+      noteData.note = newCode;
+      this.setState({
+        item: noteData
+      });
+    }
+    if (this.state.code != "Write something"){ 
+      /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */      
+    }
+  },
 
   render: function() {
     
@@ -107,14 +170,14 @@ var Wrapper = React.createClass({
           name: "gfm",
           highlightFormatting: true
         }
-
       };
       var loginOrOut;
       var register;
       var emailAddress;
       if(this.state.authData){
         emailAddress = <li className="user-email sidebar-bottom-link">{this.state.authData.password.email}</li>;
-        loginOrOut = <li className="logout-link sidebar-bottom-link"><Link to="logout" className="navbar-brand">Log out</Link></li>;
+        // loginOrOut = <li className="logout-link sidebar-bottom-link"><Link to="logout" className="navbar-brand">Log out</Link></li>;
+        loginOrOut = <li className="logout-link sidebar-bottom-link"><p className="navbar-brand" onClick={this.logOutUser}>Log out</p></li>;
         register = null
       } else {
         loginOrOut = <li><Link to="login" className="navbar-brand">Log in</Link></li>;
@@ -135,16 +198,16 @@ var Wrapper = React.createClass({
       var pad;
       var sidebar;
       // <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
-      if (LoggedIn) {
+      if (this.state.authData) {
         console.log('logged in'); 
         // One pad component. If logged in, send option for user info, else send option for local storage.
-        pad = <Pad localStorage={false}  />;
+        pad = <Pad localStorage={false} code={this.state.code} updateCode={this.updateCode} />;
         sidebar = <div className="notes">
                     <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} />
                   </div>;
       } else {
 
-        sidebar = <LoginForm logInUser={this.logInUser} />;
+        sidebar = <LoginForm logInUser={this.logInUser} updateCode={this.updateCode} />;
         pad = <Pad localStorage={true} />;
       }
       // if(this.state.uid) {

@@ -8,7 +8,6 @@ var Writer = require('./Writer.js');
 var Router = require('react-router');
 var Link = require('react-router').Link
 var classNames = require('classnames');
-var UnauthenticatedSidebar = require('./UnauthenticatedSidebar.js');
 
 var fuzzy = require('fuzzy');
 var moment = require('moment');
@@ -143,39 +142,7 @@ var Pad = React.createClass({
   },
 
   updateCode: function(newCode) {
-    console.log('typing');
-    this.setState({
-        code: newCode
-    });
-    if (this.state.code != "Write something" && this.state.item == null) {
-      console.log('Not default note');
-      /* Create a new note */
-      this.createNewNote(this.state.code);
-      console.log('Sending to createNewNote');
-    } else if (this.state.item){
-
-      
-      /* If an item exists, update that item */
-      // var activeNoteRef = firebaseRef.child('/notes/' + this.state.activeNoteKey); 
-      // // Update FB with this new text
-      // // TODO: THIS is wrong. It should not create a new reference every time it updates. That's crazy.
-      // activeNoteRef.update({
-      //   "note": this.state.code,
-      //   "updated_at": Firebase.ServerValue.TIMESTAMP
-      // });
-      console.log('Updating existing note');
-      var noteData = this.state.item;
-      noteData.note = newCode;
-      this.setState({
-        // item.note: 'test'
-        item: noteData
-      });
-      console.log(this.state.item.note);
-    }
-    if (this.state.code != "Write something"){ 
-      /* On update, set the state of Codemirror to the newly typed text. Also save the new text to Firebase */      
-    }
-    
+    this.props.updateCode(newCode);
   },
   placeClickedNote: function(clickedNote, clickedNoteKey) {
     // If there's already an active note, remove the binding before creating a new one. 
@@ -359,12 +326,6 @@ var Pad = React.createClass({
         created_at = <p>Created on: {created}</p>
         updated_at = <p>Last updated at: {this.state.item.updated_at}</p>
       }
-      var LoggedIn = this.state.uid;
-      // <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
-      if (LoggedIn) {
-        console.log('logged in');
-      }
-      // if(this.state.uid) {
         return (
           <div>
             <div className="main-content-container">
@@ -372,19 +333,13 @@ var Pad = React.createClass({
                 <div className="note-dates">
                   {created_at}
                 </div>
-                <Writer value={this.state.code} options={options} onChange={this.updateCode} testUpdate={this.testUpdate} placeholder={this.state.placeholder} />
+                <Writer value={this.props.code} options={options} onChange={this.updateCode} testUpdate={this.testUpdate} placeholder={this.state.placeholder} />
                 <p className="character-count">{this.state.code.length} characters</p>
               </section>
             </div>
           </div>
         );
-      // } else {
-        return (
-          <div>
-            <UnauthenticatedSidebar />
-          </div>
-        )
-      // }
+
       
   }
     

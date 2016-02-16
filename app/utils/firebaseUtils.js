@@ -55,7 +55,7 @@ var firebaseUtils = {
   logout: function(){
     ref.unauth();
     cachedUser = null;
-    this.onChange(false);
+    // this.onChange(false);
   }
 };
 
