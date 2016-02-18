@@ -5,6 +5,7 @@ var TimeAgo = require('react-timeago');
 var Rebase = require('re-base');
 var classNames = require('classnames');
 var Note = require('./Note.js');
+var Basic = require('./Basic.js');
 
 var NoteList = React.createClass({
   /* This compenent contains the list of individual notes */
@@ -53,31 +54,34 @@ var NoteList = React.createClass({
   
   render: function() {    
     return (
-      <CSSTransitionGroup 
-        className="notes-list" 
-        component="ul" 
-        transitionName="order" 
-        transitionEnterTimeout={300} 
-        transitionLeaveTimeout={300}
-      >      
-        {this.props.noteKeys.map(function(item, i) {   
-          if (this.props.activeNoteKey == item['.key']) {
-             var activeNote = true;
-          }       
-          // console.log('activeNote', activeNote);
-          var btnClass = classNames({
-            'btn': true,
-            'btn-pressed': this.state.isPressed,
-            'btn-over': !this.state.isPressed && this.state.isHovered,
-            'active-note': activeNote
-          });
-          // console.log(item);
-          return (
-            <Note noteKey={item} noteDigit={i} className={btnClass} auth={this.props.auth} activeNote={activeNote ? activeNote : null } onClickedNote={this.onClickedNote} removeFromList={this.removeFromList}  />
-          );
-        }, this)}
+      <div>
+        <Basic />
+        <CSSTransitionGroup 
+          className="notes-list" 
+          component="ul" 
+          transitionName="order" 
+          transitionEnterTimeout={300} 
+          transitionLeaveTimeout={300}
+        >      
+          {this.props.noteKeys.map(function(item, i) {   
+            if (this.props.activeNoteKey == item['.key']) {
+               var activeNote = true;
+            }       
+            // console.log('activeNote', activeNote);
+            var btnClass = classNames({
+              'btn': true,
+              'btn-pressed': this.state.isPressed,
+              'btn-over': !this.state.isPressed && this.state.isHovered,
+              'active-note': activeNote
+            });
+            // console.log(item);
+            return (
+              <Note noteKey={item} noteDigit={i} className={btnClass} auth={this.props.auth} activeNote={activeNote ? activeNote : null } onClickedNote={this.onClickedNote} removeFromList={this.removeFromList}  />
+            );
+          }, this)}
 
-      </CSSTransitionGroup>
+        </CSSTransitionGroup>
+      </div>
     );
   }
 });
