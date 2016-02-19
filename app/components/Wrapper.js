@@ -238,7 +238,7 @@ var Wrapper = React.createClass({
         // One pad component. If logged in, send option for user info, else send option for local storage.
         pad = <Pad localStorage={false} code={this.state.code} updateCode={this.updateCode} />;
         sidebar = <div className="notes">
-                    <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} />
+                    <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} noteList={this.state.notes} />
                   </div>;
       } else {
 
