@@ -41,7 +41,7 @@ var Wrapper = React.createClass({
       userNoteKeys: [],
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
-      sidebarOpen: false,
+      sidebarOpen: true,
     };
   },
   

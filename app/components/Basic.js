@@ -200,41 +200,78 @@ const languages = [
   }
 ];
 
+var testData = [
+  {
+    name: 'testing 1',
+    note: 'Testing 1 note'
+  },
+  {
+    name: 'testing 2',
+    note: 'Testing 2 note'
+  },
+  {
+    name: 'testing 3',
+    note: 'Testing 3 note'
+  },
+  {
+    name: 'testing 4',
+    note: 'Testing 4 note'
+  }
+]
+
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
 function escapeRegexCharacters(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function getSuggestions(value) {
-  const escapedValue = escapeRegexCharacters(value.trim());
+// function getSuggestions(value) {
+//   const escapedValue = escapeRegexCharacters(value.trim());
   
-  if (escapedValue === '') {
-    return [];
-  }
+//   if (escapedValue === '') {
+//     return [];
+//   }
 
-  const regex = new RegExp('^' + escapedValue, 'i');
+//   const regex = new RegExp('^' + escapedValue, 'i');
 
-  // return languages.filter(language => regex.test(language.name));
-  return languages.filter(language => regex.test(language.name));
+//   // return languages.filter(language => regex.test(language.name));
+//   return languages.filter(language => regex.test(language.name));
 
-  // ---- This isn't working because This isn't defined, because this is outside of the Basic component. How do we transfer?
-}
+//   // ---- This isn't working because This isn't defined, because this is outside of the Basic component. How do we transfer?
+// }
 
 function getSuggestionValue(suggestion) {
-  return suggestion.name;
+  return suggestion.note;
 }
 
 function renderSuggestion(suggestion) {
   return (
-    <span>{suggestion.name}</span>
+    <span>{suggestion.note}</span>
   );
 }
 
 var Basic = React.createClass({
+
+  getSuggestions: function(value) {
+    const escapedValue = escapeRegexCharacters(value.trim());
+    
+    if (escapedValue === '') {
+      return [];
+    }
+
+    const regex = new RegExp('^' + escapedValue, 'i');
+
+    // return languages.filter(language => regex.test(language.name));
+    var notes = this.props.noteList
+    console.log(notes);
+    console.log(languages);
+    return this.props.noteList.filter(note => regex.test(note.note));
+    // return notes.filter(note => regex.test(note.note));
+  },
   getInitialState: function(){
     return {
       value: '',
-      suggestions: 'getSuggestions'
+      suggestions: this.getSuggestions(''),
+      testData: testData
     }
   },
   componentWillMount: function(){
@@ -266,7 +303,7 @@ var Basic = React.createClass({
   
   onSuggestionsUpdateRequested: function({ value }) {
     this.setState({
-      suggestions: getSuggestions(value)
+      suggestions: this.getSuggestions(value)
     });
   },
 
