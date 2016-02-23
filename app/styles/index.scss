@@ -1782,3 +1782,51 @@ html {
   text-overflow: ellipsis;
   direction: block;
 }
+
+.modal-search-wrap {
+  max-width: 500px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+.ReactModalPortal {
+  position: relative;
+  z-index: 3; 
+}
+.search-modal {
+  .ReactModal__Overlay {
+    position: 'fixed';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.75);
+    -webkit-perspective: 600;
+    perspective: 600;
+    opacity: 0;
+
+  }
+
+  .ReactModal__Overlay--after-open {
+    opacity: 1;
+    transition: opacity 150ms ease-out;
+  }
+
+  .ReactModal__Content {
+    -webkit-transform: scale(0.5) rotateX(-30deg);
+  }
+
+  .ReactModal__Content--after-open {
+    -webkit-transform: scale(1) rotateX(0deg);
+    transition: all 150ms ease-in;
+  }
+
+  .ReactModal__Overlay--before-close {
+    opacity: 0;
+  }
+
+  .ReactModal__Content--before-close {
+    -webkit-transform: scale(0.5) rotateX(30deg);
+    transition: all 150ms ease-in;
+  }
+}

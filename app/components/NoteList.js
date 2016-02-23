@@ -55,7 +55,7 @@ var NoteList = React.createClass({
   render: function() {    
     return (
       <div>
-        <Basic noteList={this.props.noteList} />
+        
         <CSSTransitionGroup 
           className="notes-list" 
           component="ul" 

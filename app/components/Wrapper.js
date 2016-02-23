@@ -15,6 +15,9 @@ var fuzzy = require('fuzzy');
 var moment = require('moment');
 var Rebase = require('re-base');
 var Codemirror = require('react-codemirror');
+var Modal = require('react-modal');
+var Basic = require('./Basic.js');
+var key = require('keymaster');
 var firebaseRef;
 var activeNoteRef;
 var authData;
@@ -27,7 +30,33 @@ var usersNotesList = []
     // require('../../node_modules/codemirror/mode/markdown/markdown.js')
     // require('../../node_modules/codemirror/mode/gfm/gfm.js');
     // require('../../node_modules/codemirror/addon/display/placeholder.js');
+const customStyles = {
 
+  overlay : {
+    position          : 'fixed',
+    top               : 0,
+    left              : 0,
+    right             : 0,
+    bottom            : 0,
+    backgroundColor   : 'rgba(0,0,0, 0.75)'
+  },
+  content : {
+    position                   : 'absolute',
+    top                        : '40px',
+    left                       : '40px',
+    right                      : '40px',
+    bottom                     : '40px',
+    border                     : 'none',
+    background                 : 'transparent',
+    overflow                   : 'auto',
+    WebkitOverflowScrolling    : 'touch',
+    borderRadius               : '0',
+    outline                    : 'none',
+    padding                    : '20px'
+ 
+  }
+
+};
 var Wrapper = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState: function() {
@@ -42,6 +71,7 @@ var Wrapper = React.createClass({
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
       sidebarOpen: true,
+      modalIsOpen: false
     };
   },
   
@@ -70,12 +100,31 @@ var Wrapper = React.createClass({
     }
   },
 
+  componentDidMount: function() {
+    // key('a', function(){ alert('you pressed a!') });
+    console.log('modal' + this.state.modalIsOpen);
+    key('⌘+f, ctrl+f', this.openModal.bind(this));
+  },
+
+  componentWillUnmount: function() {
+    // key.unbind('a');
+  },
+
   findUserNotesAndLoop: function(uid) {
     // Grab the user's notes keys and loop through them
     var ref = firebaseRef.child('users/' + uid + '/notes');
     var query = ref.orderByChild('date_updated');
     this.bindAsArray(query, 'userNoteKeys');  
   },
+
+  openModal: function() {
+    this.setState({modalIsOpen: true});
+  },
+ 
+  closeModal: function() {
+    this.setState({modalIsOpen: false});
+  },
+  
   expandSidebar: function(){
     this.setState({
       sidebarOpen: !this.state.sidebarOpen
@@ -248,6 +297,15 @@ var Wrapper = React.createClass({
       // if(this.state.uid) {
         return (
           <div>
+            <Modal 
+            className="search-modal"
+            isOpen={this.state.modalIsOpen}
+            onRequestClose={this.closeModal}
+            style={customStyles} >
+              <div className="modal-search-wrap">
+                <Basic noteList={this.state.notes} />
+              </div>
+          </Modal>
             <div className="pad-container">
               <div className={sidebarClass}>
                 <div className="sidebar-wrap">
