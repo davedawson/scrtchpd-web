@@ -141,6 +141,7 @@
 
 var React = require('react');
 var Autosuggest = require('react-autosuggest');
+var AutosuggestHighlight = require('autosuggest-highlight');
 const languages = [
   {
     name: 'C',
@@ -243,9 +244,48 @@ function getSuggestionValue(suggestion) {
   return suggestion.note;
 }
 
-function renderSuggestion(suggestion) {
+function renderSuggestion(suggestion, { value, valueBeforeUpDown }) {
+  // return (
+  //   <span>{suggestion.note}</span>
+  // );
+  const suggestionText = `${suggestion.updated_at} ${suggestion.note}`;
+  const query = (valueBeforeUpDown || value).trim();
+  const matches = AutosuggestHighlight.match(suggestionText, query);
+  const parts = AutosuggestHighlight.parse(suggestionText, matches);
+  // var top = parts[0][text];
+  // var bottom = parts[2].text.substr(0, parts[2].text.length-50); 
+  console.log(parts);
   return (
-    <span>{suggestion.note}</span>
+    <span className={'suggestion-content ' + suggestion.twitter}>
+      <span className="name">
+        {
+          parts.map((part, index) => {
+            const className = part.highlight ? 'highlight' : null;
+            // var shortPart = part.text.substring(0,10);
+            var shortPart = part.text.substr(part.text.length - 5);
+
+            if (index == 0) {
+              var first = part.text.substr(part.text.length - 70);
+              return (
+                <span className={className} key={index}>{first}</span>
+              );
+            } else if (index == 1) {
+              console.log('not first');
+              return (
+                <span className={className} key={index}>{part.text}</span>
+              );  
+            } else {
+                var last = part.text.substring(0, 70);
+                
+                return (
+                  <span className={className} key={index}>{last}</span>
+                );  
+            }
+            
+          })
+        }
+      </span>
+    </span>
   );
 }
 
@@ -258,15 +298,18 @@ var Basic = React.createClass({
       return [];
     }
 
-    const regex = new RegExp('^' + escapedValue, 'i');
-
+    // const regex = new RegExp('^' + escapedValue, 'i');
+    const regex = new RegExp(escapedValue, 'i');
+    
     // return languages.filter(language => regex.test(language.name));
     var notes = this.props.noteList
-    console.log(notes);
-    console.log(languages);
+    // console.log(notes);
+    // console.log(languages);
+    
     return this.props.noteList.filter(note => regex.test(note.note));
     // return notes.filter(note => regex.test(note.note));
   },
+
   getInitialState: function(){
     return {
       value: '',
@@ -310,8 +353,9 @@ var Basic = React.createClass({
   render: function() {
     const { value, suggestions } = this.state;
     const inputProps = {
-      placeholder: "Type 'c'",
+      placeholder: "Search your notes",
       value,
+      type: 'search',
       onChange: this.onInputChange
     };
 
