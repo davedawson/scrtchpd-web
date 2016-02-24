@@ -76,7 +76,8 @@ var Wrapper = React.createClass({
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
       sidebarOpen: true,
-      modalIsOpen: false
+      modalIsOpen: false,
+      writerFocused: true
     };
   },
   
@@ -164,6 +165,53 @@ var Wrapper = React.createClass({
       authData: null
     });
   },
+  createNewNote: function(item){
+    console.log('Creating a new note');
+      // Create a new note object, with the first character typed. 
+      var newNotePath;
+      function setNewNoteKey(newNotePath){
+        this.setState({
+          code: this.state.code,
+          activeNoteKey: newNotePath
+        });
+      }
+      var newNoteRef = this.firebaseRefs.notes.push({
+        "note": this.state.code,
+        "created_at": Firebase.ServerValue.TIMESTAMP,
+        "updated_at": Firebase.ServerValue.TIMESTAMP,
+        "user_id": this.state.authData.uid
+      }, 
+        function() { 
+          var newNoteString = newNoteRef.toString();
+          newNotePath = newNoteString.substr(newNoteString.lastIndexOf('/') + 1);
+          console.log(newNotePath);
+          console.log('callback completed');          
+          // setNewNoteKey(newNotePath)
+        }
+      );
+      
+      // This binds as an object, which allows to be updated from FB.
+      // This is only a one-way binding. Needs to be 2 way.
+
+      // this.bindAsObject(newNoteRef, "item");
+      base.syncState('/notes/' + newNoteRef.toString().substr(newNoteRef.toString().lastIndexOf('/') + 1), {
+        context: this,
+        state: 'item',
+        asArray: false
+      });
+      console.log('newnote', newNoteRef.toString());
+      this.setState({
+        code: this.state.code,
+        activeNoteKey: newNoteRef.toString().substr(newNoteRef.toString().lastIndexOf('/') + 1)
+      });
+      var newNoteKey = newNoteRef.key();
+      var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
+      var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
+      /* var newNoteUserRef = userNotesRef.push({"user": true, "test3": false, "test4": "testing"}); */
+      // this.unbind("emptyNote");
+      // this.unbind("item");
+
+  },
   placeClickedNote: function(clickedNote, clickedNoteKey) {
     // If there's already an active note, remove the binding before creating a new one. 
     if (activeNoteRef){
@@ -195,7 +243,8 @@ var Wrapper = React.createClass({
       }
     });
     this.setState({
-      activeNoteKey: clickedNoteKey
+      activeNoteKey: clickedNoteKey, 
+      writerFocused: true
     });
   },
 
@@ -251,10 +300,42 @@ var Wrapper = React.createClass({
 
       this.setState({
         code: "",
-        activeNoteKey: newNoteKey
+        activeNoteKey: newNoteKey,
+        writerFocused: true
       });
       var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
       var newNoteUserRef = userNotesRef.child(newNoteKey).set(true);
+  },
+  onFocusChange: function(focused){
+    console.log('focus change from Writer.js');
+    this.setState({
+      writerFocused: focused
+    });
+
+    // If the active note is empty when unfocused, remove it. This prevents a long list of empty notes.
+    // Need to get key from the note that was just active, we want to remove that note, not the newly activated note.
+    console.log(this.state.code);
+    if (this.state.code === ""){
+      // var note = firebaseRef.child('/notes/' + this.state.activeNoteKey);
+      // var userNoteKey = firebaseRef.child('users/' + this.state.authData.uid + '/notes/' + this.state.activeNoteKey)
+      // console.log(note.toString());
+      // console.log(userNoteKey.toString());
+      // note.remove(onComplete);
+      // userNoteKey.remove(onComplete);
+    } else {
+      // var note = firebaseRef.child('/notes/' + this.state.activeNoteKey);
+      // var userNoteKey = firebaseRef.child('users/' + this.state.auth.uid + '/notes/' + this.state.activeNoteKey)
+      // console.log(note.toString());
+      // console.log(userNoteKey.toString());
+      // note.remove(onComplete);
+      // userNoteKey.remove(onComplete);
+    }
+  },
+  changeWriterFocus: function(state){
+    console.log('focus', state);
+    this.setState({
+      writerFocused: state
+    })
   },
 
   render: function() {
@@ -300,14 +381,14 @@ var Wrapper = React.createClass({
       if (this.state.authData) {
         console.log('logged in'); 
         // One pad component. If logged in, send option for user info, else send option for local storage.
-        pad = <Pad localStorage={false} code={this.state.code} updateCode={this.updateCode} />;
+        pad = <Pad refs="pad" localStorage={false} code={this.state.code} updateCode={this.updateCode} writerFocused={this.state.writerFocused} onFocusChange={this.onFocusChange} focusWriter={this.focusWriter} />;
         sidebar = <div className="notes">
                     <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} noteList={this.state.notes} />
                   </div>;
       } else {
 
-        sidebar = <LoginForm logInUser={this.logInUser} updateCode={this.updateCode} />;
-        pad = <Pad localStorage={true} />;
+        sidebar = <LoginForm logInUser={this.logInUser} />;
+        pad = <Pad refs="pad" localStorage={true} writerFocused={this.state.writerFocused} updateCode={this.updateCode} onFocusChange={this.onFocusChange} focusWriter={this.focusWriter} />;
       }
       // if(this.state.uid) {
         return (
