@@ -76,7 +76,7 @@ var NoteList = React.createClass({
             });
             // console.log(item);
             return (
-              <Note noteKey={item} noteDigit={i} className={btnClass} auth={this.props.auth} activeNote={activeNote ? activeNote : null } onClickedNote={this.onClickedNote} removeFromList={this.removeFromList}  />
+              <Note noteKey={item} noteDigit={i} name={item['.key']} className={btnClass} auth={this.props.auth} activeNote={activeNote ? activeNote : null } onClickedNote={this.onClickedNote} removeFromList={this.removeFromList}  />
             );
           }, this)}
 

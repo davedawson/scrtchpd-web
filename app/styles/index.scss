@@ -1797,7 +1797,7 @@ html {
   position: relative;
   z-index: 3; 
 }
-.search-modal {
+// .search-modal {
   .ReactModal__Overlay {
     position: 'fixed';
     top: 0;
@@ -1805,8 +1805,9 @@ html {
     right: 0;
     bottom: 0;
     background: rgba(255, 255, 255, 0.95);
-    -webkit-perspective: 600;
-    perspective: 600;
+    -webkit-perspective: 1300px;
+    -moz-perspective: 1300px;
+    perspective: 1300px;
     opacity: 0;
 
   }
@@ -1817,12 +1818,31 @@ html {
   }
 
   .ReactModal__Content {
-    -webkit-transform: scale(0.5) rotateX(-30deg);
+    // -webkit-transform: scale(0.5) rotateX(-30deg);
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-transform: rotateX(-60deg);
+    -moz-transform: rotateX(-60deg);
+    -ms-transform: rotateX(-60deg);
+    transform: rotateX(-60deg);
+    -webkit-transform-origin: 50% 0;
+    -moz-transform-origin: 50% 0;
+    transform-origin: 50% 0;
+    opacity: 0;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
   }
 
   .ReactModal__Content--after-open {
-    -webkit-transform: scale(1) rotateX(0deg);
-    transition: all 150ms ease-in;
+    // -webkit-transform: scale(1) rotateX(0deg);
+    // transition: all 150ms ease-in;
+    -webkit-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    -ms-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+    opacity: 1;
   }
 
   .ReactModal__Overlay--before-close {
@@ -1830,7 +1850,8 @@ html {
   }
 
   .ReactModal__Content--before-close {
-    -webkit-transform: scale(0.5) rotateX(30deg);
-    transition: all 150ms ease-in;
+    opacity: 0;
+    // -webkit-transform: scale(0.5) rotateX(30deg);
+    // transition: all 150ms ease-in;
   }
-}
+// }

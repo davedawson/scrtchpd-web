@@ -30,6 +30,11 @@ var usersNotesList = []
     // require('../../node_modules/codemirror/mode/markdown/markdown.js')
     // require('../../node_modules/codemirror/mode/gfm/gfm.js');
     // require('../../node_modules/codemirror/addon/display/placeholder.js');
+key.filter = function(event){
+  var tagName = (event.target || event.srcElement).tagName;
+  key.setScope(/^(INPUT|TEXTAREA|SELECT)$/.test(tagName) ? 'input' : 'other');
+  return true;
+}
 const customStyles = {
 
   overlay : {
@@ -104,6 +109,11 @@ var Wrapper = React.createClass({
     // key('a', function(){ alert('you pressed a!') });
     console.log('modal' + this.state.modalIsOpen);
     key('⌘+f, ctrl+f', this.openModal.bind(this));
+    key.filter = function(event){
+        var tagName = (event.target || event.srcElement).tagName;
+        key.setScope(/^(INPUT|TEXTAREA|SELECT)$/.test(tagName) ? 'input' : 'other');
+        return true;
+    }
   },
 
   componentWillUnmount: function() {
@@ -123,7 +133,11 @@ var Wrapper = React.createClass({
   },
  
   closeModal: function() {
-    this.setState({modalIsOpen: false});
+    
+    // setTimeout(function(){
+      this.setState({modalIsOpen: false});
+    // }.bind(this),500);
+    
   },
   
   expandSidebar: function(){
@@ -304,7 +318,7 @@ var Wrapper = React.createClass({
             onRequestClose={this.closeModal}
             style={customStyles} >
               <div className="modal-search-wrap">
-                <Basic noteList={this.state.notes} />
+                <Basic noteList={this.state.notes} placeClickedNote={this.placeClickedNote} closeModal={this.closeModal} />
               </div>
           </Modal>
             <div className="pad-container">

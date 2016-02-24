@@ -244,6 +244,8 @@ function escapeRegexCharacters(str) {
 
 function getSuggestionValue(suggestion) {
   return suggestion.note;
+  // return suggestion.key;
+  console.log('suggestion', suggestion);
 }
 
 function renderSuggestion(suggestion, { value, valueBeforeUpDown }) {
@@ -262,7 +264,7 @@ function renderSuggestion(suggestion, { value, valueBeforeUpDown }) {
   console.log(date);
   console.log(`${suggestion.updated_at}`);
   return (
-    <span className={'suggestion-content ' + suggestion.twitter}>
+    <span className={'suggestion-content ' + suggestion.twitter} >
       <span className="name">
 
         <strong>
@@ -326,8 +328,7 @@ var Basic = React.createClass({
   getInitialState: function(){
     return {
       value: '',
-      suggestions: this.getSuggestions(''),
-      testData: testData
+      suggestions: this.getSuggestions('')
     }
   },
   componentWillMount: function(){
@@ -338,6 +339,11 @@ var Basic = React.createClass({
     this.setState({
       value: newValue
     });
+  },
+
+  onSuggestionSelected: function(event, { suggestion, suggestionValue, method }){
+    this.props.placeClickedNote(suggestion.note, suggestion['.key']);
+    this.props.closeModal();
   },
   // constructor() {
   //   super();
@@ -381,6 +387,7 @@ var Basic = React.createClass({
                    onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
                    getSuggestionValue={getSuggestionValue}
                    renderSuggestion={renderSuggestion}
+                   onSuggestionSelected={this.onSuggestionSelected}
                    inputProps={inputProps} />
        </form>
     );
