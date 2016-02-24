@@ -142,6 +142,8 @@
 var React = require('react');
 var Autosuggest = require('react-autosuggest');
 var AutosuggestHighlight = require('autosuggest-highlight');
+var moment = require('moment');
+var TimeAgo = require('react-timeago');
 const languages = [
   {
     name: 'C',
@@ -248,22 +250,33 @@ function renderSuggestion(suggestion, { value, valueBeforeUpDown }) {
   // return (
   //   <span>{suggestion.note}</span>
   // );
-  const suggestionText = `${suggestion.updated_at} ${suggestion.note}`;
+  var date = new Date(suggestion.updated_at);
+  var updated = moment().format('YYYY-MM-DDTHH:mm');
+
+  const suggestionText = `${suggestion.note}`;
   const query = (valueBeforeUpDown || value).trim();
   const matches = AutosuggestHighlight.match(suggestionText, query);
   const parts = AutosuggestHighlight.parse(suggestionText, matches);
   // var top = parts[0][text];
   // var bottom = parts[2].text.substr(0, parts[2].text.length-50); 
-  console.log(parts);
+  console.log(date);
+  console.log(`${suggestion.updated_at}`);
   return (
     <span className={'suggestion-content ' + suggestion.twitter}>
       <span className="name">
+
+        <strong>
+          <TimeAgo date={date} />
+        
+        </strong>
         {
           parts.map((part, index) => {
             const className = part.highlight ? 'highlight' : null;
             // var shortPart = part.text.substring(0,10);
             var shortPart = part.text.substr(part.text.length - 5);
-
+            
+            
+            
             if (index == 0) {
               var first = part.text.substr(part.text.length - 70);
               return (
