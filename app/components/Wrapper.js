@@ -119,6 +119,7 @@ var Wrapper = React.createClass({
 
   openModal: function() {
     this.setState({modalIsOpen: true});
+    document.getElementById('search-notes-field').focus();
   },
  
   closeModal: function() {

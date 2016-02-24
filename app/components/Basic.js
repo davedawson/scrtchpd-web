@@ -356,15 +356,20 @@ var Basic = React.createClass({
       placeholder: "Search your notes",
       value,
       type: 'search',
-      onChange: this.onInputChange
+      onChange: this.onInputChange,
+      autoFocus:true,
+      id: 'search-notes-field'
     };
 
+
     return (
-      <Autosuggest suggestions={suggestions}
+      <form>
+        <Autosuggest suggestions={suggestions}
                    onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
                    getSuggestionValue={getSuggestionValue}
                    renderSuggestion={renderSuggestion}
                    inputProps={inputProps} />
+       </form>
     );
   }
 });
