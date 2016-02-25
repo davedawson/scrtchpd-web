@@ -75,6 +75,7 @@ var Wrapper = React.createClass({
       userNoteKeys: [],
       usersNotesList: new Object(),
       codePlaceholder: "Write something!",
+      emptyNote: true,
       sidebarOpen: true,
       modalIsOpen: false,
       writerFocused: true
@@ -202,7 +203,8 @@ var Wrapper = React.createClass({
       console.log('newnote', newNoteRef.toString());
       this.setState({
         code: this.state.code,
-        activeNoteKey: newNoteRef.toString().substr(newNoteRef.toString().lastIndexOf('/') + 1)
+        activeNoteKey: newNoteRef.toString().substr(newNoteRef.toString().lastIndexOf('/') + 1),
+        emptyNote: false
       });
       var newNoteKey = newNoteRef.key();
       var userNotesRef = new Firebase("https://scrtchpd.firebaseio.com/users/" + this.state.authData.uid + "/notes");
@@ -244,7 +246,8 @@ var Wrapper = React.createClass({
     });
     this.setState({
       activeNoteKey: clickedNoteKey, 
-      writerFocused: true
+      writerFocused: true,
+      emptyNote: false
     });
   },
 
@@ -377,6 +380,12 @@ var Wrapper = React.createClass({
       var LoggedIn = authData;
       var pad;
       var sidebar;
+      var newNoteButton;
+      if(!this.state.emptyNote){
+        newNoteButton = <div className="new-note-button main-button" onClick={this.placeNewNote}>
+                    <img src="app/img/plus.svg" alt="Create a new note" />
+                  </div>;
+      }
       // <SearchBar searchHandler={this.searchHandler} query={this.state.query} doSearch={this.doSearch} focus={this.state.sidebarOpen ? focus : null} />
       if (this.state.authData) {
         console.log('logged in'); 
@@ -406,7 +415,6 @@ var Wrapper = React.createClass({
               <div className={sidebarClass}>
                 <div className="sidebar-wrap">
                   {sidebar}
-                  
                 </div>
                 <div className="sidebar-bottom-links">
                   {register}
@@ -419,9 +427,7 @@ var Wrapper = React.createClass({
                   <div className="menu-button main-button" onClick={this.expandSidebar}>
                     <span><img src="app/img/hamburger.svg" alt="Menu" /></span>
                   </div>
-                  <div className="new-note-button main-button" onClick={this.placeNewNote}>
-                    <img src="app/img/plus.svg" alt="Create a new note" />
-                  </div>
+                  {newNoteButton}
                 </div>
                 
                 <section className="writer">

@@ -131,7 +131,6 @@ var Pad = React.createClass({
       }
         return (
           <div>
-          <p onClick={this.focusWriter}>Focus!</p>
             <div className="main-content-container">
               <section className="writer">
                 <div className="note-dates">
