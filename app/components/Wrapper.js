@@ -364,10 +364,8 @@ var Wrapper = React.createClass({
         // loginOrOut = <li className="logout-link sidebar-bottom-link"><Link to="logout" className="navbar-brand">Log out</Link></li>;
         loginOrOut = <li className="logout-link sidebar-bottom-link"><p className="navbar-brand" onClick={this.logOutUser}>Log out</p></li>;
         register = null
-      } else {
-        loginOrOut = <li><Link to="login" className="navbar-brand">Log in</Link></li>;
-        register = <li><Link to="register" className="navbar-brand"> Register </Link></li>;
-      }
+        var sidebarBottomLinks = <div className="sidebar-bottom-links">{emailAddress} {loginOrOut}</div>
+      } 
       var sidebarClass = classNames({
         'sidebar': true,
         'open': this.state.sidebarOpen
@@ -422,11 +420,7 @@ var Wrapper = React.createClass({
                 <div className="sidebar-wrap">
                   {sidebar}
                 </div>
-                <div className="sidebar-bottom-links">
-                  {register}
-                  {emailAddress}
-                  {loginOrOut}
-                </div>
+                {sidebarBottomLinks}
               </div>
               <div className="main-content-container">
                 <div className="buttons">

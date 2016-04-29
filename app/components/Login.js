@@ -35,7 +35,7 @@ var Login = React.createClass({
       <div className="login-page account-page">
         <ReactCSSTransitionGroup transitionName="form" transitionAppear={true} transitionAppearTimeout={300} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
           <div className="form-wrap">
-            <h1>Log in!</h1>
+            <h1>Log In and Get Writing</h1>
             <form onSubmit={this.handleSubmit}>
               <div className="form-group">
                 <input className="form-control" ref="email" placeholder="Email"/>

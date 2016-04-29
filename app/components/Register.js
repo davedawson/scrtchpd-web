@@ -16,7 +16,7 @@ var Register = React.createClass({
       <div className="register-page account-page">
       <ReactCSSTransitionGroup transitionName="login-register-form" transitionAppear={true} transitionAppearTimeout={500} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
         <div className="form-wrap">
-          <h1>Register</h1>
+          <h1>Register, and back back to work</h1>
             <form onSubmit={this.handleSubmit}>
               <div className="form-group">
                 <input className="form-control" ref="email" placeholder="Email"/>

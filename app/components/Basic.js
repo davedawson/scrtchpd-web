@@ -268,7 +268,7 @@ function renderSuggestion(suggestion, { value, valueBeforeUpDown }) {
       <span className="name">
 
         <strong>
-          <TimeAgo date={date} />
+          
         
         </strong>
         {
