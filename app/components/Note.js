@@ -99,7 +99,7 @@ var Note = React.createClass({
 		return (
       <li className={activeClass} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
   			<div onClick={this.activateNote}>
-          <p><strong><TimeAgo date={this.state.updated_at} /></strong><span className="note-preview">{this.state.note}</span></p>
+          <p><strong>{this.state.updated_at}</strong><span className="note-preview">{this.state.note}</span></p>
         </div>
         <a className={deleteClass} onClick={this.handleDeleteNote}><span className="vertical-text">delete</span></a>
       </li>
