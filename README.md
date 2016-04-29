@@ -41,6 +41,10 @@ The boilerplate is minimalistic, meaning you have to expand on the current workf
 * Both tests and application changes will refresh automatically in the browser
 * Run `gulp test` to run all tests with phantomJS and produce XML reports
 
+--- 
+
+Changed to Webpack. Now to run: `npm start`.
+
 ### Minify the code, ready for production
 * Run `NODE_ENV=production gulp deploy`
 

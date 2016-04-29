@@ -10,6 +10,7 @@ var Link = require('react-router').Link
 var classNames = require('classnames');
 var Pad = require('./Pad.js');
 var LoginForm = require('./Login.js');
+var RegisterForm = require('./Register.js');
 var firebaseUtils = require('../utils/firebaseUtils');
 var fuzzy = require('fuzzy');
 var moment = require('moment');
@@ -17,6 +18,7 @@ var Rebase = require('re-base');
 var Codemirror = require('react-codemirror');
 var Modal = require('react-modal');
 var Basic = require('./Basic.js');
+var LoggedOutSidebar = require('./LoggedOutSidebar.js');
 var key = require('keymaster');
 var firebaseRef;
 var activeNoteRef;
@@ -381,6 +383,9 @@ var Wrapper = React.createClass({
       var pad;
       var sidebar;
       var newNoteButton;
+      var loginForm;
+      var registerForm;
+
       if(!this.state.emptyNote){
         newNoteButton = <div className="new-note-button main-button" onClick={this.placeNewNote}>
                     <img src="app/img/plus.svg" alt="Create a new note" />
@@ -396,7 +401,8 @@ var Wrapper = React.createClass({
                   </div>;
       } else {
 
-        sidebar = <LoginForm logInUser={this.logInUser} />;
+        sidebar = <LoggedOutSidebar logInUser={this.logInUser} />;
+        // <div><LoginForm logInUser={this.logInUser} /> <RegisterForm logInUser={this.logInUser} /></div>
         pad = <Pad refs="pad" localStorage={true} writerFocused={this.state.writerFocused} updateCode={this.updateCode} onFocusChange={this.onFocusChange} focusWriter={this.focusWriter} />;
       }
       // if(this.state.uid) {
