@@ -121,7 +121,9 @@ var Wrapper = React.createClass({
   },
 
   componentWillUnmount: function() {
-    // key.unbind('a');
+    this.unbind("userNoteKeys");
+    base.removeBinding(allNotesRef);
+    base.removeBinding(query);
   },
 
   findUserNotesAndLoop: function(uid) {
