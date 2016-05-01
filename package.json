@@ -35,7 +35,7 @@
     "react-router": "1.0.3",
     "react-timeago": "3.0.0",
     "autosuggest-highlight": "^2.1.1",
-    "formsy-react": "^0.18.0",
+    "formsy-react": "^0.18.0"
   },
   "devDependencies": {
     "assets-webpack-plugin": "2.2.0",
