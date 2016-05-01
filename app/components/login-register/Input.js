@@ -31,6 +31,7 @@ var Input = React.createClass({
         <input
           type={this.props.type || 'text'}
           name={this.props.name}
+          ref={this.props.ref}
           onChange={this.changeValue}
           value={this.getValue()}
           checked={this.props.type === 'checkbox' && this.getValue() ? 'checked' : null}

@@ -28,10 +28,11 @@ var Input = React.createClass({
     return (
       <div className={className}>
         <label htmlFor={this.props.name}>{this.props.title}</label>
-        <input
+        <input ref="test"
           type={this.props.type || 'text'}
           placeholder={this.props.placeholder}
           name={this.props.name}
+          
           onChange={this.changeValue}
           value={this.getValue()}
           checked={this.props.type === 'checkbox' && this.getValue() ? 'checked' : null}
