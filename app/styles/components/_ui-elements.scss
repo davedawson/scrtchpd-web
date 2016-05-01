@@ -1,0 +1,31 @@
+.buttons {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  z-index: 3;
+}
+.main-button {
+  position: relative;
+  z-index: 3;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border: 3px solid #ccc;
+  border-radius: 100px;
+  img {
+    max-width: 100%;
+  }
+  &:hover {
+    border-color: #777;
+  }
+}
+.menu-button {
+  position: relative;
+  top: 20px;
+  left: 20px;
+}
+.new-note-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}

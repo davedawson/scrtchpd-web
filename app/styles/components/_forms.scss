@@ -1,0 +1,107 @@
+// Default form styles
+
+ input[type="text"],
+ input[type="password"],
+ input[type="email"],
+ input[type="url"],
+ input[type="date"],
+ input[type="month"],
+ input[type="time"],
+ input[type="datetime"],
+ input[type="datetime-local"],
+ input[type="week"],
+ input[type="number"],
+ input[type="search"],
+ input[type="tel"],
+ input[type="color"],
+ select,
+ textarea {
+    width: 100%;
+    padding: 0.5em 0.6em;
+    display: inline-block;
+    border: 1px solid #ccc;
+    // box-shadow: inset 0 1px 3px #ddd;
+    border-radius: 4px;
+    vertical-align: middle;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+button {
+  width: 100%;
+  display: block;
+  border: 0;
+  background: $color-dark;
+  color: $color-light;
+  padding: 0.5em 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.account-page {
+  h1 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .form-wrap {
+    width: 50%;
+    max-width: 350px;
+    margin: 0 auto;
+    @include center;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.2em;
+  }
+  .login-register {
+    cursor: pointer;
+  }
+}
+
+form {
+  button:disabled {
+    background: #999;
+  }
+  .validation-error {
+    font-size: 12px;
+    color: #000;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+}
+
+// Login-Register page transitions
+.form-enter {
+  opacity: 0.01;
+}
+
+.form-enter.form-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.form-leave {
+  opacity: 1;
+}
+
+.form-leave.form-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.form-appear {
+  opacity: 0.01;
+}
+
+.form-appear.form-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
