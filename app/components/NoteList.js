@@ -6,6 +6,7 @@ var Rebase = require('re-base');
 var classNames = require('classnames');
 var Note = require('./Note.js');
 var Basic = require('./Basic.js');
+var LazyLoad = require('react-lazyload');
 
 var NoteList = React.createClass({
   /* This compenent contains the list of individual notes */
@@ -75,8 +76,8 @@ var NoteList = React.createClass({
               'active-note': activeNote
             });
             // console.log(item);
-            return (
-              <Note noteKey={item} noteDigit={i} name={item['.key']} className={btnClass} auth={this.props.auth} activeNote={activeNote ? activeNote : null } onClickedNote={this.onClickedNote} removeFromList={this.removeFromList}  />
+            return (              
+                <Note noteKey={item} noteDigit={i} name={item['.key']} className={btnClass} auth={this.props.auth} activeNote={activeNote ? activeNote : null } onClickedNote={this.onClickedNote} removeFromList={this.removeFromList}  />
             );
           }, this)}
 

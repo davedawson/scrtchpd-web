@@ -5,6 +5,8 @@ var Rebase = require('re-base');
 var moment = require('moment');
 var firebaseRef;
 var base;
+var LazyLoad = require('react-lazyload');
+
 var Note = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState: function(){
@@ -97,12 +99,12 @@ var Note = React.createClass({
     var date = moment(this.state.updated_at).endOf('day').fromNow();
 
 		return (
-      <li className={activeClass} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
-  			<div onClick={this.activateNote}>
-          <p><strong>{this.state.updated_at}</strong><span className="note-preview">{this.state.note}</span></p>
-        </div>
-        <a className={deleteClass} onClick={this.handleDeleteNote}><span className="vertical-text">delete</span></a>
-      </li>
+        <li className={activeClass} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
+    			<div onClick={this.activateNote}>
+            <p><strong>{this.state.updated_at}</strong><span className="note-preview">{this.state.note}</span></p>
+          </div>
+          <a className={deleteClass} onClick={this.handleDeleteNote}><span className="vertical-text">delete</span></a>
+        </li>
 		)
 	}
 });

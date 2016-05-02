@@ -71,16 +71,17 @@ var Wrapper = React.createClass({
       // code: "Write something",
       counter: 0,
       query:'',
-      notes: [],
+      // notes: [],
       // item: new Object(),
-      listItems: [],
+      // listItems: [],
       userNoteKeys: [],
-      usersNotesList: new Object(),
+      // usersNotesList: new Object(),
       codePlaceholder: "Write something!",
       emptyNote: true,
       sidebarOpen: true,
       modalIsOpen: false,
       writerFocused: true
+      // authData: null
     };
   },
   
@@ -88,8 +89,9 @@ var Wrapper = React.createClass({
     firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
     base = Rebase.createClass('https://scrtchpd.firebaseio.com/');
     // All notes
-    var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
-    this.bindAsArray(allNotesRef, "notes");
+    // I think we can do without this:
+    // var allNotesRef = firebaseRef.child("/notes/").limitToLast(15);
+    // this.bindAsArray(allNotesRef, "notes");
     authData = firebaseRef.getAuth();
     console.log('data', authData);
     if (authData) {
@@ -154,8 +156,9 @@ var Wrapper = React.createClass({
   },
 
   logInUser: function(){
-    firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
+    // firebaseRef = new Firebase("https://scrtchpd.firebaseio.com/");
     authData = firebaseRef.getAuth();
+    console.log(authData);
     if (authData) {
       this.setState({
         authData: authData
@@ -165,10 +168,18 @@ var Wrapper = React.createClass({
   },
   logOutUser: function(){
     console.log('log out');
+    // Log a user out, and clear user info from state
     firebaseUtils.logout()
-    this.setState({
-      authData: null
-    });
+    this.unbind("userNoteKeys");
+    // this.setState({
+    //   authData: null,
+    //   code: null,
+    //   item: null,
+    //   userNoteKeys: [],
+    // });
+    this.replaceState(this.getInitialState())
+    
+    // base.removeBinding(query);
   },
   createNewNote: function(item){
     console.log('Creating a new note');
