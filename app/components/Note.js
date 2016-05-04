@@ -24,7 +24,7 @@ var Note = React.createClass({
     //   state: 'note',
     //   asArray: true
     // });
-    base.listenTo('notes/' + this.props.noteKey['.key'], {
+    this.ref = base.listenTo('notes/' + this.props.noteKey['.key'], {
       context: this,
       asArray: false,
       then(noteData){
@@ -36,6 +36,9 @@ var Note = React.createClass({
     });
 
     // console.log(this.props.noteKey['.key']);
+  },
+  componentWillUnmount: function() {
+    base.removeBinding(this.ref);
   },
 	activateNote: function(item) { 
     /* This takes the clicked note, and displays it's full content in the main text window */

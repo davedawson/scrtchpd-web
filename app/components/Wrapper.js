@@ -25,6 +25,7 @@ var activeNoteRef;
 var authData;
 var usersNotes = [];
 var base;
+var item;
 var usersNotesListTest = new Object();
 // User specific notes
 var usersNotesKeys = []
@@ -171,6 +172,8 @@ var Wrapper = React.createClass({
     // Log a user out, and clear user info from state
     firebaseUtils.logout()
     this.unbind("userNoteKeys");
+    // base.removeBinding(activeNoteRef);
+    // base.removeBinding(item);
     // this.setState({
     //   authData: null,
     //   code: null,
@@ -291,6 +294,7 @@ var Wrapper = React.createClass({
 
   placeNewNote: function(){
     var newNotePath;
+    
     console.log('New Note, creating now');
       var newNoteRef = this.firebaseRefs.notes.push({
         "note": this.state.code,
@@ -310,7 +314,7 @@ var Wrapper = React.createClass({
       // Set this new note as the active note, set it as true, and replace the code content with the note text.
       // console.log(newNoteCreatedRef);
       // this.bindAsObject(newNoteCreatedRef, "item");
-      base.syncState('/notes/' + newNoteKey, {
+      item = base.syncState('/notes/' + newNoteKey, {
         context: this,
         state: 'item',
         asArray: false
