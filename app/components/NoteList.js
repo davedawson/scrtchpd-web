@@ -50,6 +50,7 @@ var NoteList = React.createClass({
   },
   removeFromList: function(noteKeyToDelete) {
     console.log(noteKeyToDelete);
+    this.props.removeDeletedNoteDataFromPad(noteKeyToDelete);
 
   },  
   

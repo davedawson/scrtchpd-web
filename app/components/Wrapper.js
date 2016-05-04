@@ -69,7 +69,7 @@ var Wrapper = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState: function() {
     return {
-      // code: "Write something",
+      // code: null,
       counter: 0,
       query:'',
       // notes: [],
@@ -185,6 +185,9 @@ var Wrapper = React.createClass({
     // base.removeBinding(query);
   },
   createNewNote: function(item){
+    // TODO: This should be combined with this.placeNewNote. This function creates a new note once the 
+    // user starts typing in an empty note (like when they first load the app). And this.placeNewNote
+    // creates a new note when the New Note button is clicked.
     console.log('Creating a new note');
       // Create a new note object, with the first character typed. 
       var newNotePath;
@@ -194,7 +197,7 @@ var Wrapper = React.createClass({
           activeNoteKey: newNotePath
         });
       }
-      var newNoteRef = this.firebaseRefs.notes.push({
+      var newNoteRef = firebaseRef.child('notes').push({
         "note": this.state.code,
         "created_at": Firebase.ServerValue.TIMESTAMP,
         "updated_at": Firebase.ServerValue.TIMESTAMP,
@@ -296,7 +299,8 @@ var Wrapper = React.createClass({
     var newNotePath;
     
     console.log('New Note, creating now');
-      var newNoteRef = this.firebaseRefs.notes.push({
+    console.log(firebaseRef.child('notes'));
+      var newNoteRef = firebaseRef.child('notes').push({
         "note": this.state.code,
         "created_at": Firebase.ServerValue.TIMESTAMP,
         "updated_at": Firebase.ServerValue.TIMESTAMP,
@@ -351,6 +355,17 @@ var Wrapper = React.createClass({
       // console.log(userNoteKey.toString());
       // note.remove(onComplete);
       // userNoteKey.remove(onComplete);
+    }
+  },
+  removeDeletedNoteDataFromPad: function(noteKeyToDelete){
+    console.log(noteKeyToDelete, 'testing clear note pad');
+    if (noteKeyToDelete == this.state.activeNoteKey) {
+      this.setState({
+        code: "",
+        activeNoteKey: null,
+        item: null,
+        emptyNote: true
+      })
     }
   },
   changeWriterFocus: function(state){
@@ -412,7 +427,7 @@ var Wrapper = React.createClass({
         // One pad component. If logged in, send option for user info, else send option for local storage.
         pad = <Pad refs="pad" localStorage={false} code={this.state.code} updateCode={this.updateCode} writerFocused={this.state.writerFocused} onFocusChange={this.onFocusChange} focusWriter={this.focusWriter} />;
         sidebar = <div className="notes">
-                    <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} noteList={this.state.notes} />
+                    <NoteList noteKeys={this.state.filteredData ? this.state.filteredData : this.state.userNoteKeys} auth={this.state.authData} handleNoteAreaUpdate={this.placeClickedNote} activeNoteKey={this.state.activeNoteKey ? this.state.activeNoteKey : null} noteList={this.state.notes} removeDeletedNoteDataFromPad={this.removeDeletedNoteDataFromPad}  />
                   </div>;
       } else {
 
